@@ -20,11 +20,6 @@
 #pragma mark -
 #pragma mark Embedded information for what(1) 
 
-// embed
-#define WO_RCSID(msg)                                                       \
-        static const char *const rcsid[] __attribute__((used)) =            \
-        { (char *)rcsid, "\100(#)" msg }
-
 // embed with tag
 #define WO_TAGGED_RCSID(msg, tag)                                           \
         static const char *const rcsid_ ## tag[] __attribute__((used)) =    \
@@ -33,7 +28,6 @@
 // use as string
 #define WO_RCSID_STRING(tag) (rcsid_ ## tag[1] + 4)
 
-WO_RCSID("$Id: main.m 45 2007-07-16 16:29:40Z wincent $");
 WO_TAGGED_RCSID("Copyright 2002 Omni Development, Inc.", omni_copyright);
 WO_TAGGED_RCSID("Copyright 2005-2007 Wincent Colaiuta.", copyright);
 

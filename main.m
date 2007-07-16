@@ -2,7 +2,7 @@
 //  main.m
 //  wincent-strings-util
 //
-//  Copyright 2005-2006 Wincent Colaiuta.
+//  Copyright 2005-2007 Wincent Colaiuta.
 //  Derived from Omni stringsUtil, Copyright 2002 Omni Development, Inc.
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@
 
 WO_RCSID("$Id: main.m 45 2007-07-16 16:29:40Z wincent $");
 WO_TAGGED_RCSID("Copyright 2002 Omni Development, Inc.", omni_copyright);
-WO_TAGGED_RCSID("Copyright 2005-2006 Wincent Colaiuta.", copyright);
+WO_TAGGED_RCSID("Copyright 2005-2007 Wincent Colaiuta.", copyright);
 
 #if defined(__ppc__)
 WO_TAGGED_RCSID("Architecture: PowerPC (ppc)", architecture);

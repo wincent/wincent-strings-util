@@ -1,5 +1,3 @@
-$Id: LICENSE.txt 37 2006-08-17 13:25:39Z wincent $
-
 		    GNU GENERAL PUBLIC LICENSE
 		       Version 2, June 1991
 

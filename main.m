@@ -4,7 +4,6 @@
 //
 //  Copyright 2005-2006 Wincent Colaiuta.
 //  Derived from Omni stringsUtil, Copyright 2002 Omni Development, Inc.
-//  $Id: main.m 45 2007-07-16 16:29:40Z wincent $
 //
 
 #pragma mark -

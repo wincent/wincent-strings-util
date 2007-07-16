@@ -4,7 +4,6 @@
 //
 //  Created by Wincent Colaiuta on Sat Feb 18 2006.
 //  Copyright 2006 Wincent Colaiuta. All rights reserved.
-//  $Id: prefix.pch 11 2006-02-19 03:51:44Z wincent $
 //
 
 #ifdef __OBJC__

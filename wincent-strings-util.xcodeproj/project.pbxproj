@@ -1,0 +1,252 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		BC79AB4E09A74186008FF8BC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* main.m */; settings = {ATTRIBUTES = (); }; };
+		BC79AB5009A74186008FF8BC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FB779EFE84155DC02AAC07 /* Foundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		08FB7796FE84155DC02AAC07 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		08FB779EFE84155DC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		BC79AB6809A744DE008FF8BC /* prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prefix.pch; sourceTree = "<group>"; };
+		BC79AB9009A74989008FF8BC /* wincent-strings-util.1 */ = {isa = PBXFileReference; explicitFileType = text.man; fileEncoding = 4; path = "wincent-strings-util.1"; sourceTree = "<group>"; };
+		BC79ABC109A74FAC008FF8BC /* wincent-strings-util */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "compiled.mach-o.executable"; path = "wincent-strings-util"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BC79AC2909A7645A008FF8BC /* stringsUtil.tar.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = stringsUtil.tar.gz; sourceTree = "<group>"; };
+		BC79AC4109A76580008FF8BC /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		BC79AC5709A767C4008FF8BC /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BC79AB4F09A74186008FF8BC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BC79AB5009A74186008FF8BC /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* stringsUtil */ = {
+			isa = PBXGroup;
+			children = (
+				BC79AC4709A76604008FF8BC /* Omni */,
+				BC79AC4509A765DF008FF8BC /* Source */,
+				BC33C24009A972D900E38D2D /* Unit tests */,
+				BC79AC4409A765D2008FF8BC /* Documentation */,
+				08FB779DFE84155DC02AAC07 /* External Frameworks and Libraries */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = stringsUtil;
+			sourceTree = "<group>";
+		};
+		08FB779DFE84155DC02AAC07 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				08FB779EFE84155DC02AAC07 /* Foundation.framework */,
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BC79ABC109A74FAC008FF8BC /* wincent-strings-util */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BC33C24009A972D900E38D2D /* Unit tests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Unit tests";
+			sourceTree = "<group>";
+		};
+		BC79AC4409A765D2008FF8BC /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+				BC79AB9009A74989008FF8BC /* wincent-strings-util.1 */,
+				BC79AC4109A76580008FF8BC /* LICENSE.txt */,
+				BC79AC5709A767C4008FF8BC /* README.txt */,
+			);
+			name = Documentation;
+			sourceTree = "<group>";
+		};
+		BC79AC4509A765DF008FF8BC /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				08FB7796FE84155DC02AAC07 /* main.m */,
+				BC79AB6809A744DE008FF8BC /* prefix.pch */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		BC79AC4709A76604008FF8BC /* Omni */ = {
+			isa = PBXGroup;
+			children = (
+				BC79AC2909A7645A008FF8BC /* stringsUtil.tar.gz */,
+			);
+			name = Omni;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		BC79AB4C09A74186008FF8BC /* wincent-strings-util */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BC79AB5109A74186008FF8BC /* Build configuration list for PBXNativeTarget "wincent-strings-util" */;
+			buildPhases = (
+				BC79AB4D09A74186008FF8BC /* Sources */,
+				BC79AB4F09A74186008FF8BC /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "wincent-strings-util";
+			productInstallPath = "$(HOME)/bin";
+			productName = stringsUtil;
+			productReference = BC79ABC109A74FAC008FF8BC /* wincent-strings-util */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = BC79AB4509A7355B008FF8BC /* Build configuration list for PBXProject "wincent-strings-util" */;
+			hasScannedForEncodings = 0;
+			mainGroup = 08FB7794FE84155DC02AAC07 /* stringsUtil */;
+			projectDirPath = "";
+			targets = (
+				BC79AB4C09A74186008FF8BC /* wincent-strings-util */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BC79AB4D09A74186008FF8BC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BC79AB4E09A74186008FF8BC /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		BC79AB4609A7355B008FF8BC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DEBUGGING_SYMBOLS = full;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_ENABLE_SYMBOL_SEPARATION = NO;
+				GCC_FAST_OBJC_DISPATCH = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_THREADSAFE_STATICS = NO;
+				GCC_WARN_ABOUT_POINTER_SIGNEDNESS = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				STRIP_INSTALLED_PRODUCT = NO;
+				WARNING_CFLAGS = "-Wall";
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		BC79AB4709A7355B008FF8BC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEPLOYMENT_POSTPROCESSING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DEBUGGING_SYMBOLS = full;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_ENABLE_SYMBOL_SEPARATION = NO;
+				GCC_FAST_OBJC_DISPATCH = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_THREADSAFE_STATICS = NO;
+				GCC_WARN_ABOUT_POINTER_SIGNEDNESS = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				STRIP_INSTALLED_PRODUCT = YES;
+				STRIP_STYLE = all;
+				WARNING_CFLAGS = "-Wall";
+			};
+			name = Release;
+		};
+		BC79AB5209A74186008FF8BC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREFIX_HEADER = prefix.pch;
+				PRODUCT_NAME = "wincent-strings-util";
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		BC79AB5309A74186008FF8BC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_PREFIX_HEADER = prefix.pch;
+				INSTALL_PATH = "$(HOME)/bin";
+				PRODUCT_NAME = "wincent-strings-util";
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BC79AB4509A7355B008FF8BC /* Build configuration list for PBXProject "wincent-strings-util" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BC79AB4609A7355B008FF8BC /* Debug */,
+				BC79AB4709A7355B008FF8BC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BC79AB5109A74186008FF8BC /* Build configuration list for PBXNativeTarget "wincent-strings-util" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BC79AB5209A74186008FF8BC /* Debug */,
+				BC79AB5309A74186008FF8BC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}

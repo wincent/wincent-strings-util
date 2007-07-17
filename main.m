@@ -90,15 +90,10 @@ WO_TAGGED_RCSID("wincent-strings-util", productname);
         return YES;
     }
 
-    // use macros here to prevent Xcode's autoindentation from freaking out
-    // bug filed with Apple against Xcode 2.2.1: rdar://4450544
-#define WO_START_COMMENT    @"/*"
-#define WO_END_COMMENT      @"*/"
-    
-    if ([self scanString:WO_START_COMMENT intoString:NULL])
+    if ([self scanString:@"/*" intoString:NULL])
     {
-        [self scanUpToString:WO_END_COMMENT intoString:value];
-        if ([self scanString:WO_END_COMMENT intoString:NULL])
+        [self scanUpToString:@"*/" intoString:value];
+        if ([self scanString:@"*/" intoString:NULL])
             return YES;
     }
     

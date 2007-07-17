@@ -264,16 +264,12 @@ NSArray *merge(NSArray *baseEntries, NSArray *mergeEntries)
     NSMutableDictionary *mergeDictionary = [NSMutableDictionary dictionary];
 
     // convert baseEntries array into a set, for fast look-up
-    for (unsigned i = 0, max = [baseEntries count]; i < max; i++)
-    {
-        NSDictionary *entry = [baseEntries objectAtIndex:i];
+    for (NSDictionary *entry in baseEntries)
         [baseSet addObject:[entry objectForKey:@"key"]];
-    }
     
     // convert mergeEntries array into a dictionary, ignoring comments
-    for (unsigned i = 0, max = [mergeEntries count]; i < max; i++)
+    for (NSDictionary *entry in mergeEntries)
     {
-        NSDictionary    *entry  = [mergeEntries objectAtIndex:i];
         NSString        *key    = [entry objectForKey:@"key"];
         [mergeDictionary setObject:[entry objectForKey:@"value"] forKey:key];
         
@@ -283,17 +279,18 @@ NSArray *merge(NSArray *baseEntries, NSArray *mergeEntries)
     }
 
     // merge (start with "base"; translated keys from "merge" added to output)
-    for (unsigned i = 0, max = [baseEntries count]; i < max; i++)
+    for (NSDictionary *entry in baseEntries)
     {
-        NSMutableDictionary *entry = [NSMutableDictionary dictionaryWithDictionary:[baseEntries objectAtIndex:i]];
-        NSDictionary *mergeValue = [mergeDictionary objectForKey:[entry objectForKey:@"key"]];
+        NSMutableDictionary *mutableEntry = [entry mutableCopy];
+        NSDictionary *mergeValue = [mergeDictionary objectForKey:[mutableEntry objectForKey:@"key"]];
         
         if (mergeValue)
-            [entry setObject:mergeValue forKey:@"value"];
+            [mutableEntry setObject:mergeValue forKey:@"value"];
         else
-            fprintf(stderr, ":: warning: missing key '%s' in merge (added to output)\n", [[entry objectForKey:@"key"] UTF8String]);
+            fprintf(stderr, ":: warning: missing key '%s' in merge (added to output)\n",
+					[[mutableEntry objectForKey:@"key"] UTF8String]);
         
-        [results addObject:[NSDictionary dictionaryWithDictionary:entry]];
+        [results addObject:[NSDictionary dictionaryWithDictionary:mutableEntry]];
     }
 
     return [[NSArray alloc] initWithArray:results];
@@ -304,13 +301,12 @@ NSString *format(NSArray *entries)
 {
     NSCParameterAssert(entries != nil);
     NSMutableString *resultString = [NSMutableString string];
-    for (unsigned i = 0, iMax = [entries count]; i < iMax; i++)
+    for (NSDictionary *entry in entries)
     {
-        NSDictionary    *entry      = [entries objectAtIndex:i];
         NSArray         *comments   = [entry objectForKey:@"comments"];
         
-        for (unsigned j = 0, jMax = [comments count]; j < jMax; j++)
-            [resultString appendFormat:@"/*%@*/\n", [comments objectAtIndex:j]];
+        for (NSString *comment in comments)
+            [resultString appendFormat:@"/*%@*/\n", comment];
 
         [resultString appendFormat:@"%@ = %@;\n\n", [entry objectForKey:@"key"],
             [entry objectForKey:@"value"]];

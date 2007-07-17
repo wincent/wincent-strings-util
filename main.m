@@ -21,9 +21,8 @@
 #pragma mark Embedded information for what(1) 
 
 // embed with tag
-#define WO_TAGGED_RCSID(msg, tag)                                           \
-        static const char *const rcsid_ ## tag[] __attribute__((used)) =    \
-        { (char *)rcsid_ ## tag, "\100(#)" msg }
+#define WO_TAGGED_RCSID(msg, tag) \
+        static const char *const rcsid_ ## tag[] __attribute__((used)) = { (char *)rcsid_ ## tag, "\100(#)" msg }
 
 // use as string
 #define WO_RCSID_STRING(tag) (rcsid_ ## tag[1] + 4)
@@ -258,10 +257,10 @@ NSArray *merge(NSArray *baseEntries, NSArray *mergeEntries)
 {
     NSCParameterAssert(baseEntries != nil);
     NSCParameterAssert(mergeEntries != nil);
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    NSMutableArray *results = [NSMutableArray arrayWithCapacity:[baseEntries count]];
-    NSMutableSet *baseSet = [NSMutableSet set];
-    NSMutableDictionary *mergeDictionary = [NSMutableDictionary dictionary];
+    NSAutoreleasePool   *pool               = [[NSAutoreleasePool alloc] init];
+    NSMutableArray      *results            = [NSMutableArray arrayWithCapacity:[baseEntries count]];
+    NSMutableSet        *baseSet            = [NSMutableSet set];
+    NSMutableDictionary *mergeDictionary    = [NSMutableDictionary dictionary];
 
     // convert baseEntries array into a set, for fast look-up
     for (NSDictionary *entry in baseEntries)
@@ -270,7 +269,7 @@ NSArray *merge(NSArray *baseEntries, NSArray *mergeEntries)
     // convert mergeEntries array into a dictionary, ignoring comments
     for (NSDictionary *entry in mergeEntries)
     {
-        NSString        *key    = [entry objectForKey:@"key"];
+        NSString *key = [entry objectForKey:@"key"];
         [mergeDictionary setObject:[entry objectForKey:@"value"] forKey:key];
         
         // warn about keys that will not appear in output
@@ -288,7 +287,7 @@ NSArray *merge(NSArray *baseEntries, NSArray *mergeEntries)
             [mutableEntry setObject:mergeValue forKey:@"value"];
         else
             fprintf(stderr, ":: warning: missing key '%s' in merge (added to output)\n",
-					[[mutableEntry objectForKey:@"key"] UTF8String]);
+                    [[mutableEntry objectForKey:@"key"] UTF8String]);
         
         [results addObject:[NSDictionary dictionaryWithDictionary:mutableEntry]];
     }
@@ -303,13 +302,10 @@ NSString *format(NSArray *entries)
     NSMutableString *resultString = [NSMutableString string];
     for (NSDictionary *entry in entries)
     {
-        NSArray         *comments   = [entry objectForKey:@"comments"];
-        
-        for (NSString *comment in comments)
+        for (NSString *comment in [entry objectForKey:@"comments"])
             [resultString appendFormat:@"/*%@*/\n", comment];
 
-        [resultString appendFormat:@"%@ = %@;\n\n", [entry objectForKey:@"key"],
-            [entry objectForKey:@"value"]];
+        [resultString appendFormat:@"%@ = %@;\n\n", [entry objectForKey:@"key"], [entry objectForKey:@"value"]];
     }
     return [NSString stringWithString:resultString];
 }
@@ -422,10 +418,10 @@ int main(int argc, const char * argv[])
     // usage 2: wincent-strings-util -info plistpath -strings stringspath
     else if (infoPath && stringsPath)
     {
-        NSDictionary *plist = [NSDictionary dictionaryWithContentsOfFile:infoPath];
-        
-        NSMutableString *strings =
-            [NSMutableString stringWithContentsOfFile:stringsPath encoding:NSUnicodeStringEncoding error:NULL];
+        NSDictionary    *plist      = [NSDictionary dictionaryWithContentsOfFile:infoPath];
+        NSMutableString *strings    = [NSMutableString stringWithContentsOfFile:stringsPath
+                                                                       encoding:NSUnicodeStringEncoding
+                                                                          error:NULL];
         if (!plist)
             fprintf(stderr, ":: error: Failure reading %s\n", [infoPath UTF8String]);
         else if (!strings)
@@ -433,16 +429,16 @@ int main(int argc, const char * argv[])
         else // all good
         {
             checkUTF16(stringsPath);    // warn if doesn't look like UTF-16
-            NSEnumerator *enumerator = [plist keyEnumerator];
-            NSString *key = nil;
+            NSEnumerator    *enumerator = [plist keyEnumerator];
+            NSString        *key        = nil;
             while ((key = [enumerator nextObject]))
             {
 #define WO_LEFT_DELIMITER   0x00ab  /* "Left-pointing double angle quotation mark" */
 #define WO_RIGHT_DELIMITER  0x00bb  /* "Right-pointing double angle quotation mark" */
                 NSString *replacement = [plist objectForKey:key];
                 if (!replacement  || ![replacement isKindOfClass:[NSString class]]) continue;
-                (void)[strings replaceOccurrencesOfString:
-                    [NSString stringWithFormat:@"%C%@%C", WO_LEFT_DELIMITER, key, WO_RIGHT_DELIMITER]
+                NSString *needle = [NSString stringWithFormat:@"%C%@%C", WO_LEFT_DELIMITER, key, WO_RIGHT_DELIMITER];
+                (void)[strings replaceOccurrencesOfString:needle
                                                withString:replacement
                                                   options:NSLiteralSearch
                                                     range:NSMakeRange(0, [strings length])];

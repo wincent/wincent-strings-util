@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 42;
+	objectVersion = 43;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -16,7 +16,7 @@
 		08FB779EFE84155DC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		BC79AB6809A744DE008FF8BC /* prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prefix.pch; sourceTree = "<group>"; };
 		BC79AB9009A74989008FF8BC /* wincent-strings-util.1 */ = {isa = PBXFileReference; explicitFileType = text.man; fileEncoding = 4; path = "wincent-strings-util.1"; sourceTree = "<group>"; };
-		BC79ABC109A74FAC008FF8BC /* wincent-strings-util */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "compiled.mach-o.executable"; path = "wincent-strings-util"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BC79ABC109A74FAC008FF8BC /* wincent-strings-util */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "wincent-strings-util"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC79AC2909A7645A008FF8BC /* stringsUtil.tar.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = stringsUtil.tar.gz; sourceTree = "<group>"; };
 		BC79AC4109A76580008FF8BC /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		BC79AC5709A767C4008FF8BC /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
@@ -123,9 +123,11 @@
 		08FB7793FE84155DC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = BC79AB4509A7355B008FF8BC /* Build configuration list for PBXProject "wincent-strings-util" */;
+			compatibilityVersion = "Xcode 3.0";
 			hasScannedForEncodings = 0;
 			mainGroup = 08FB7794FE84155DC02AAC07 /* stringsUtil */;
 			projectDirPath = "";
+			projectRoot = "";
 			targets = (
 				BC79AB4C09A74186008FF8BC /* wincent-strings-util */,
 			);
@@ -165,7 +167,7 @@
 				GCC_WARN_ABOUT_POINTER_SIGNEDNESS = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOTS = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
 				STRIP_INSTALLED_PRODUCT = NO;
 				WARNING_CFLAGS = "-Wall";
 				ZERO_LINK = YES;
@@ -195,7 +197,7 @@
 				GCC_WARN_ABOUT_POINTER_SIGNEDNESS = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				PREBINDING = NO;
-				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOTS = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
 				STRIP_INSTALLED_PRODUCT = YES;
 				STRIP_STYLE = all;
 				WARNING_CFLAGS = "-Wall";

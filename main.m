@@ -249,6 +249,8 @@ NSArray *merge(NSArray *baseEntries, NSArray *mergeEntries)
 {
     NSCParameterAssert(baseEntries != nil);
     NSCParameterAssert(mergeEntries != nil);
+    
+    __attribute__((unused))
     NSAutoreleasePool   *pool               = [[NSAutoreleasePool alloc] init];
     NSMutableArray      *results            = [NSMutableArray arrayWithCapacity:[baseEntries count]];
     NSMutableSet        *baseSet            = [NSMutableSet set];
@@ -361,6 +363,7 @@ void checkUTF16(NSString *path)
 
 int main(int argc, const char * argv[])
 {
+    __attribute__((unused))
     NSAutoreleasePool   *pool           = [[NSAutoreleasePool alloc] init];
     int                 exitCode        = EXIT_FAILURE;
     

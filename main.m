@@ -39,7 +39,7 @@ WO_TAGGED_RCSID("Architecture: PowerPC (ppc64)", architecture);
 WO_TAGGED_RCSID("Architecture: Intel (i386)", architecture);
 #endif
 
-WO_TAGGED_RCSID("Version: 1.1", version);
+WO_TAGGED_RCSID("Version: 1.1+", version);
 WO_TAGGED_RCSID("wincent-strings-util", productname);
 
 #pragma mark -

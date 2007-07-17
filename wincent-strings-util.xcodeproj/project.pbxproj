@@ -14,6 +14,10 @@
 /* Begin PBXFileReference section */
 		08FB7796FE84155DC02AAC07 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		08FB779EFE84155DC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		BC29A7BC0C4D2C1B009E427C /* base-style.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; name = "base-style.xcconfig"; path = "../../buildtools/base-style.xcconfig"; sourceTree = SOURCE_ROOT; };
+		BC29A7BD0C4D2C1B009E427C /* debug-style.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; name = "debug-style.xcconfig"; path = "../../buildtools/debug-style.xcconfig"; sourceTree = SOURCE_ROOT; };
+		BC29A7BE0C4D2C1B009E427C /* foundation-tool-target.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; name = "foundation-tool-target.xcconfig"; path = "../../buildtools/foundation-tool-target.xcconfig"; sourceTree = SOURCE_ROOT; };
+		BC29A7BF0C4D2C1B009E427C /* release-style.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; name = "release-style.xcconfig"; path = "../../buildtools/release-style.xcconfig"; sourceTree = SOURCE_ROOT; };
 		BC79AB6809A744DE008FF8BC /* prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prefix.pch; sourceTree = "<group>"; };
 		BC79AB9009A74989008FF8BC /* wincent-strings-util.1 */ = {isa = PBXFileReference; explicitFileType = text.man; fileEncoding = 4; path = "wincent-strings-util.1"; sourceTree = "<group>"; };
 		BC79ABC109A74FAC008FF8BC /* wincent-strings-util */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "wincent-strings-util"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -37,6 +41,7 @@
 		08FB7794FE84155DC02AAC07 /* stringsUtil */ = {
 			isa = PBXGroup;
 			children = (
+				BC29A7B90C4D2BF6009E427C /* Configuration */,
 				BC79AC4709A76604008FF8BC /* Omni */,
 				BC79AC4509A765DF008FF8BC /* Source */,
 				BC33C24009A972D900E38D2D /* Unit tests */,
@@ -61,6 +66,17 @@
 				BC79ABC109A74FAC008FF8BC /* wincent-strings-util */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		BC29A7B90C4D2BF6009E427C /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				BC29A7BC0C4D2C1B009E427C /* base-style.xcconfig */,
+				BC29A7BD0C4D2C1B009E427C /* debug-style.xcconfig */,
+				BC29A7BE0C4D2C1B009E427C /* foundation-tool-target.xcconfig */,
+				BC29A7BF0C4D2C1B009E427C /* release-style.xcconfig */,
+			);
+			name = Configuration;
 			sourceTree = "<group>";
 		};
 		BC33C24009A972D900E38D2D /* Unit tests */ = {
@@ -148,70 +164,24 @@
 /* Begin XCBuildConfiguration section */
 		BC79AB4609A7355B008FF8BC /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BC29A7BD0C4D2C1B009E427C /* debug-style.xcconfig */;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DEBUGGING_SYMBOLS = full;
-				GCC_ENABLE_CPP_EXCEPTIONS = NO;
-				GCC_ENABLE_CPP_RTTI = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_ENABLE_SYMBOL_SEPARATION = NO;
-				GCC_FAST_OBJC_DISPATCH = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				GCC_THREADSAFE_STATICS = NO;
-				GCC_WARN_ABOUT_POINTER_SIGNEDNESS = NO;
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				PREBINDING = NO;
-				SDKROOTS = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
-				STRIP_INSTALLED_PRODUCT = NO;
-				WARNING_CFLAGS = "-Wall";
-				ZERO_LINK = YES;
 			};
 			name = Debug;
 		};
 		BC79AB4709A7355B008FF8BC /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BC29A7BF0C4D2C1B009E427C /* release-style.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
-				COPY_PHASE_STRIP = YES;
-				DEAD_CODE_STRIPPING = YES;
-				DEPLOYMENT_POSTPROCESSING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DEBUGGING_SYMBOLS = full;
-				GCC_ENABLE_CPP_EXCEPTIONS = NO;
-				GCC_ENABLE_CPP_RTTI = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_ENABLE_SYMBOL_SEPARATION = NO;
-				GCC_FAST_OBJC_DISPATCH = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_THREADSAFE_STATICS = NO;
-				GCC_WARN_ABOUT_POINTER_SIGNEDNESS = NO;
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				PREBINDING = NO;
-				SDKROOTS = "$(DEVELOPER_SDK_DIR)/MacOSX10.4u.sdk";
-				STRIP_INSTALLED_PRODUCT = YES;
-				STRIP_STYLE = all;
-				WARNING_CFLAGS = "-Wall";
 			};
 			name = Release;
 		};
 		BC79AB5209A74186008FF8BC /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BC29A7BE0C4D2C1B009E427C /* foundation-tool-target.xcconfig */;
 			buildSettings = {
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREFIX_HEADER = prefix.pch;
 				PRODUCT_NAME = "wincent-strings-util";
-				ZERO_LINK = YES;
 			};
 			name = Debug;
 		};

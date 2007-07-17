@@ -18,7 +18,6 @@
 		BC29A7BD0C4D2C1B009E427C /* debug-style.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; name = "debug-style.xcconfig"; path = "../../buildtools/debug-style.xcconfig"; sourceTree = SOURCE_ROOT; };
 		BC29A7BE0C4D2C1B009E427C /* foundation-tool-target.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; name = "foundation-tool-target.xcconfig"; path = "../../buildtools/foundation-tool-target.xcconfig"; sourceTree = SOURCE_ROOT; };
 		BC29A7BF0C4D2C1B009E427C /* release-style.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; name = "release-style.xcconfig"; path = "../../buildtools/release-style.xcconfig"; sourceTree = SOURCE_ROOT; };
-		BC79AB6809A744DE008FF8BC /* prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = prefix.pch; sourceTree = "<group>"; };
 		BC79AB9009A74989008FF8BC /* wincent-strings-util.1 */ = {isa = PBXFileReference; explicitFileType = text.man; fileEncoding = 4; path = "wincent-strings-util.1"; sourceTree = "<group>"; };
 		BC79ABC109A74FAC008FF8BC /* wincent-strings-util */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "wincent-strings-util"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC79AC2909A7645A008FF8BC /* stringsUtil.tar.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = stringsUtil.tar.gz; sourceTree = "<group>"; };
@@ -100,7 +99,6 @@
 			isa = PBXGroup;
 			children = (
 				08FB7796FE84155DC02AAC07 /* main.m */,
-				BC79AB6809A744DE008FF8BC /* prefix.pch */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -180,7 +178,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BC29A7BE0C4D2C1B009E427C /* foundation-tool-target.xcconfig */;
 			buildSettings = {
-				GCC_PREFIX_HEADER = prefix.pch;
 				PRODUCT_NAME = "wincent-strings-util";
 			};
 			name = Debug;
@@ -188,12 +185,8 @@
 		BC79AB5309A74186008FF8BC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_PREFIX_HEADER = prefix.pch;
 				INSTALL_PATH = "$(HOME)/bin";
 				PRODUCT_NAME = "wincent-strings-util";
-				ZERO_LINK = NO;
 			};
 			name = Release;
 		};

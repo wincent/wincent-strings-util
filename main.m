@@ -296,9 +296,7 @@ NSArray *merge(NSArray *baseEntries, NSArray *mergeEntries)
         [results addObject:[NSDictionary dictionaryWithDictionary:entry]];
     }
 
-    results = [[NSArray alloc] initWithArray:results];
-    [pool release];
-    return [results autorelease]; 
+    return [[NSArray alloc] initWithArray:results];
 }
 
 /*! Format entries for output as strings file. */
@@ -476,6 +474,5 @@ int main(int argc, const char * argv[])
                 WO_RCSID_STRING(omni_copyright),    WO_RCSID_STRING(productname),   WO_RCSID_STRING(productname));
     }
     
-    [pool release];
     return exitCode;
 }

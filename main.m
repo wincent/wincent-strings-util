@@ -148,7 +148,6 @@ bail:
     // save state
     unsigned        originalLocation        = [self scanLocation];
     NSCharacterSet  *charactersToBeSkipped  = [self charactersToBeSkipped];
-    
     NSString        *lastLine               = @"\n";
     unsigned        lineStartLocation       = 0;
     unsigned        lineCount               = 0;
@@ -185,14 +184,12 @@ bail:
 NSArray *parse(NSString *contents)
 {
     NSCParameterAssert(contents != nil);
-    NSScanner *stringScanner    = [NSScanner scannerWithString:contents];
+    NSCharacterSet *whitespace      = [NSCharacterSet characterSetWithCharactersInString:@"\n\r\t "];
+    NSMutableArray *comments        = [NSMutableArray array];
+    NSMutableArray *entries         = [NSMutableArray array];
+    NSScanner      *stringScanner   = [NSScanner scannerWithString:contents];
     [stringScanner setCharactersToBeSkipped:nil];
     [stringScanner setCaseSensitive:NO];
-
-    NSCharacterSet *whitespace  = [NSCharacterSet characterSetWithCharactersInString:@"\n\r\t "];
-    NSMutableArray *comments    = [NSMutableArray array];
-    NSMutableArray *entries     = [NSMutableArray array];
-    
     while (![stringScanner isAtEnd])
     {
         [stringScanner scanCharactersFromSet:whitespace intoString:NULL];
@@ -275,8 +272,8 @@ NSArray *merge(NSArray *baseEntries, NSArray *mergeEntries)
     // merge (start with "base"; translated keys from "merge" added to output)
     for (NSDictionary *entry in baseEntries)
     {
-        NSMutableDictionary *mutableEntry = [entry mutableCopy];
-        NSDictionary *mergeValue = [mergeDictionary objectForKey:[mutableEntry objectForKey:@"key"]];
+        NSMutableDictionary *mutableEntry   = [entry mutableCopy];
+        NSDictionary        *mergeValue     = [mergeDictionary objectForKey:[mutableEntry objectForKey:@"key"]];
         
         if (mergeValue)
             [mutableEntry setObject:mergeValue forKey:@"value"];

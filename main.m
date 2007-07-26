@@ -363,7 +363,6 @@ void checkUTF16(NSString *path)
 
 int main(int argc, const char * argv[])
 {
-    __attribute__((unused))
     NSAutoreleasePool   *pool           = [[NSAutoreleasePool alloc] init];
     int                 exitCode        = EXIT_FAILURE;
     
@@ -461,5 +460,6 @@ int main(int argc, const char * argv[])
                 WO_RCSID_STRING(omni_copyright),    WO_RCSID_STRING(productname),   WO_RCSID_STRING(productname));
     }
     
+    [pool drain];
     return exitCode;
 }

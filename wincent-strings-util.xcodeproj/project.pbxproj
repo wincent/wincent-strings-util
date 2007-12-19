@@ -3,13 +3,38 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 43;
+	objectVersion = 44;
 	objects = {
+
+/* Begin PBXAggregateTarget section */
+		BCB2833C0C5B8B730057E475 /* Installer package */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = BCB2834D0C5B8BA90057E475 /* Build configuration list for PBXAggregateTarget "Installer package" */;
+			buildPhases = (
+				BCB2833B0C5B8B730057E475 /* ShellScript */,
+			);
+			dependencies = (
+				BCB283400C5B8B770057E475 /* PBXTargetDependency */,
+			);
+			name = "Installer package";
+			productName = "Installer package";
+		};
+/* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
 		BC79AB4E09A74186008FF8BC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* main.m */; settings = {ATTRIBUTES = (); }; };
 		BC79AB5009A74186008FF8BC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FB779EFE84155DC02AAC07 /* Foundation.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		BCB2833F0C5B8B770057E475 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 08FB7793FE84155DC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = BC79AB4C09A74186008FF8BC;
+			remoteInfo = "wincent-strings-util";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		08FB7796FE84155DC02AAC07 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -134,9 +159,26 @@
 			projectRoot = "";
 			targets = (
 				BC79AB4C09A74186008FF8BC /* wincent-strings-util */,
+				BCB2833C0C5B8B730057E475 /* Installer package */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		BCB2833B0C5B8B730057E475 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# no package name specified here, so defaults to PRODUCT_NAME\n# could override this here if I wanted to incorporate the version number\n# or build from the commandline using xcodebuild and passing in an override for PRODUCT_NAME\n\"${BUILDTOOLS_DIR}/Package.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		BC79AB4D09A74186008FF8BC /* Sources */ = {
@@ -148,6 +190,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		BCB283400C5B8B770057E475 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = BC79AB4C09A74186008FF8BC /* wincent-strings-util */;
+			targetProxy = BCB2833F0C5B8B770057E475 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		BC79AB4609A7355B008FF8BC /* Debug */ = {
@@ -180,6 +230,20 @@
 			};
 			name = Release;
 		};
+		BCB2833D0C5B8B730057E475 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = WincentStringsUtility;
+			};
+			name = Debug;
+		};
+		BCB2833E0C5B8B730057E475 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = WincentStringsUtility;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -197,6 +261,15 @@
 			buildConfigurations = (
 				BC79AB5209A74186008FF8BC /* Debug */,
 				BC79AB5309A74186008FF8BC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BCB2834D0C5B8BA90057E475 /* Build configuration list for PBXAggregateTarget "Installer package" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BCB2833D0C5B8B730057E475 /* Debug */,
+				BCB2833E0C5B8B730057E475 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

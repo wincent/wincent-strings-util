@@ -141,34 +141,36 @@ NSArray *extract(NSArray *base, NSArray *target)
 //! Combine two strings files into one using a simple additive algorithm rather than a merge.
 //! This is intended to be used in conjuncton with the extract() function; given an old strings file and a partial strings file
 //! previously extracted with extract(), combine them to form a new strings file.
-//! Returns nil on failure (unlike a merge operation, the two strings files are expected to have no overlap).
-NSArray *combine(NSArray *a, NSArray *b)
+//! Unlike a merge operation, the two strings files are expected to have no overlap, but if they do the entry from \p target will
+//! take precedence and a warning will be printed to the console. This is to enable workflows wherein untranslated strings are
+//! present in a localization and are extracted (using extract()), then translated, and then used to produce an updated
+//! result.
+NSArray *combine(NSArray *base, NSArray *target)
 {
-    NSCParameterAssert(a != nil);
-    NSCParameterAssert(b != nil);
+    NSCParameterAssert(base != nil);
+    NSCParameterAssert(target != nil);
 
     __attribute__((unused)) NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    NSMutableArray *results = [a mutableCopy];
+    NSMutableArray *results = [target mutableCopy];
     NSMutableSet *keys = [NSMutableSet set];
 
     // store keys in a set for fast lookup
-    for (WOLocalizable *entry in a)
+    for (WOLocalizable *entry in target)
         [keys addObject:entry.key];
 
     BOOL duplicatesFound = NO;
-    for (WOLocalizable *entry in b)
+    for (WOLocalizable *entry in base)
     {
         if ([keys containsObject:entry.key])
         {
-            fprintf(stderr, ":: error: duplicate key '%s'\n", [entry.key UTF8String]);
-            duplicatesFound = YES;
+            fprintf(stderr, ":: warning: duplicate key '%s'\n", [entry.key UTF8String]);
             continue;
         }
 
         [results addObject:entry];
         [keys addObject:entry.key];
     }
-    return duplicatesFound ? nil : results;
+    return results;
 }
 
 //! Merge base entries and merge entries.

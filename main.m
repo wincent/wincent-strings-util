@@ -375,6 +375,8 @@ int main(int argc, const char * argv[])
             result = extract(base, input_or_die(extractPath));
         else if (combinePath)
             result = combine(base, input_or_die(combinePath));
+        else
+            result = base;
 
         // write out the result
         NSCAssert(result != nil, @"result should be non-nil");

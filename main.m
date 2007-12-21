@@ -158,7 +158,6 @@ NSArray *combine(NSArray *base, NSArray *target)
     for (WOLocalizable *entry in target)
         [keys addObject:entry.key];
 
-    BOOL duplicatesFound = NO;
     for (WOLocalizable *entry in base)
     {
         if ([keys containsObject:entry.key])

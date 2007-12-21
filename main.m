@@ -104,7 +104,7 @@ WO_TAGGED_RCSID("wincent-strings-util", productname);
         if ([self scanString:@"*/" intoString:NULL])
             return YES;
     }
-    
+
     [self setScanLocation:scanLocation]; // reset
     return NO;
 }
@@ -140,7 +140,7 @@ WO_TAGGED_RCSID("wincent-strings-util", productname);
                 goto bail;
         }
     }
-    
+
 bail:
     [self setScanLocation:scanLocation]; // reset
     return NO;
@@ -169,12 +169,12 @@ bail:
         if ([self scanString:@"\n" intoString:NULL])
             lineCount++;
     }
-    
+
     // restore state
     [self setScanLocation:originalLocation];
     [self setCharactersToBeSkipped:charactersToBeSkipped];
-    
-    return [NSString stringWithFormat:@"line %d character %d (location %d):\n%@", 
+
+    return [NSString stringWithFormat:@"line %d character %d (location %d):\n%@",
         lineCount, (originalLocation - lineStartLocation), originalLocation, lastLine];
 }
 
@@ -203,7 +203,7 @@ NSArray *parse(NSString *contents)
         [stringScanner scanCharactersFromSet:whitespace intoString:NULL];
         unichar character;
         if (![stringScanner peekCharacter:&character]) break;
-        
+
         if (character == '/')       // try to scan comment
         {
             NSString *comment = nil;
@@ -214,7 +214,7 @@ NSArray *parse(NSString *contents)
         else                        // try to scan 'key = value' pair
         {
             NSString *key, *value;
-            
+
             if (character == '\"')  // try to scan quoted string
             {
                 if (![stringScanner scanQuotedString:&key])
@@ -225,23 +225,23 @@ NSArray *parse(NSString *contents)
                 if (![stringScanner scanUnquotedString:&key])
                     [stringScanner complain:@"Invalid key"];
             }
-            
+
             // code common to quoted and unquoted strings
             [stringScanner scanCharactersFromSet:whitespace intoString:NULL];
-            
+
             if (![stringScanner scanString:@"=" intoString:NULL])
                 [stringScanner complain:@"Can't find = between key and value"];
-            
+
             [stringScanner scanCharactersFromSet:whitespace intoString:NULL];
-            
+
             if (![stringScanner scanQuotedString:&value])
                 [stringScanner complain:@"Invalid value"];
-            
+
             [stringScanner scanCharactersFromSet:whitespace intoString:NULL];
-            
+
             if (![stringScanner scanString:@";" intoString:NULL])
                 [stringScanner complain:@"Missing ;"];
-            
+
             [entries addObject:[NSDictionary dictionaryWithObjectsAndKeys:
                 key,                                @"key", 
                 value,                              @"value", 
@@ -257,7 +257,7 @@ NSArray *merge(NSArray *baseEntries, NSArray *mergeEntries)
 {
     NSCParameterAssert(baseEntries != nil);
     NSCParameterAssert(mergeEntries != nil);
-    
+
     __attribute__((unused))
     NSAutoreleasePool   *pool               = [[NSAutoreleasePool alloc] init];
     NSMutableArray      *results            = [NSMutableArray arrayWithCapacity:[baseEntries count]];
@@ -267,13 +267,13 @@ NSArray *merge(NSArray *baseEntries, NSArray *mergeEntries)
     // convert baseEntries array into a set, for fast look-up
     for (NSDictionary *entry in baseEntries)
         [baseSet addObject:[entry objectForKey:@"key"]];
-    
+
     // convert mergeEntries array into a dictionary, ignoring comments
     for (NSDictionary *entry in mergeEntries)
     {
         NSString *key = [entry objectForKey:@"key"];
         [mergeDictionary setObject:[entry objectForKey:@"value"] forKey:key];
-        
+
         // warn about keys that will not appear in output
         if (![baseSet containsObject:key])
             fprintf(stderr, ":: warning: key '%s' in merge but not in base (omitted from output)\n", [key UTF8String]);
@@ -284,13 +284,13 @@ NSArray *merge(NSArray *baseEntries, NSArray *mergeEntries)
     {
         NSMutableDictionary *mutableEntry   = [entry mutableCopy];
         NSDictionary        *mergeValue     = [mergeDictionary objectForKey:[mutableEntry objectForKey:@"key"]];
-        
+
         if (mergeValue)
             [mutableEntry setObject:mergeValue forKey:@"value"];
         else
             fprintf(stderr, ":: warning: missing key '%s' in merge (added to output)\n",
                     [[mutableEntry objectForKey:@"key"] UTF8String]);
-        
+
         [results addObject:[NSDictionary dictionaryWithDictionary:mutableEntry]];
     }
 
@@ -318,7 +318,7 @@ BOOL output(NSString *string, NSString *path)
     NSCParameterAssert(string != nil);
     NSData *data = [string dataUsingEncoding:NSUnicodeStringEncoding];
     if (!data)
-    {   
+    {
         fprintf(stderr, ":: error: Encoding failure\n");
         return NO;
     }
@@ -342,7 +342,7 @@ void checkUTF16(NSString *path)
 {
     // http://en.wikipedia.org/wiki/Byte_Order_Mark
     NSCParameterAssert(path != nil);
-    
+
     NSData *data = [NSData dataWithContentsOfFile:path];
     if (data && ([data length] >= 2))
     {
@@ -373,7 +373,7 @@ int main(int argc, const char * argv[])
 {
     NSAutoreleasePool   *pool           = [[NSAutoreleasePool alloc] init];
     int                 exitCode        = EXIT_FAILURE;
-    
+
     // process arguments
     NSUserDefaults      *arguments      = [NSUserDefaults standardUserDefaults];
     NSString            *infoPath       = [arguments stringForKey:@"info"];
@@ -381,7 +381,7 @@ int main(int argc, const char * argv[])
     NSString            *basePath       = [arguments stringForKey:@"base"];
     NSString            *mergePath      = [arguments stringForKey:@"merge"];
     NSString            *outputPath     = [arguments stringForKey:@"output"];
-    
+
     // usage 1: wincent-strings-util -base basepath [-merge mergepath] [-output outputpath]
     if (basePath)
     {
@@ -397,7 +397,7 @@ int main(int argc, const char * argv[])
             fprintf(stderr, ":: error: Parse failure for %s: %s\n", [basePath UTF8String], [[exception reason] UTF8String]);
             exit(EXIT_FAILURE);
         }
-        
+
         if (mergePath)
         {
             checkUTF16(mergePath);      // warn if it doesn't look like UTF-16
@@ -442,9 +442,9 @@ int main(int argc, const char * argv[])
                                                withString:replacement
                                                   options:NSLiteralSearch
                                                     range:NSMakeRange(0, [strings length])];
-            }            
+            }
             if (output(strings, outputPath)) exitCode = EXIT_SUCCESS;
-        }        
+        }
     }
     else    // faulty arguments supplied, show usage
     {
@@ -465,7 +465,7 @@ int main(int argc, const char * argv[])
                 WO_RCSID_STRING(productname),       WO_RCSID_STRING(version),       WO_RCSID_STRING(copyright),     
                 WO_RCSID_STRING(omni_copyright),    WO_RCSID_STRING(productname),   WO_RCSID_STRING(productname));
     }
-    
+
     [pool drain];
     return exitCode;
 }

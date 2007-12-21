@@ -42,6 +42,8 @@ WO_TAGGED_RCSID("Architecture: PowerPC (ppc)", architecture);
 WO_TAGGED_RCSID("Architecture: PowerPC (ppc64)", architecture);
 #elif defined(__i386__)
 WO_TAGGED_RCSID("Architecture: Intel (i386)", architecture);
+#elif defined(__x86_64__)
+WO_TAGGED_RCSID("Architecture: Intel (x86_64)", architecture);
 #endif
 
 WO_TAGGED_RCSID("Version: 1.1+", version);

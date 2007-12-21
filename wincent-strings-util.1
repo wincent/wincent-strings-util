@@ -1,70 +1,135 @@
 .Dd August 17, 2006
-.Dt WINCENT-STRINGS-UTIL \&1 "Wincent Strings Utility" 
+.Dt WINCENT-STRINGS-UTIL \&1 "Wincent Strings Utility"
 .Os Darwin
 .Sh NAME
 .Nm wincent-strings-util
 .Nd merge localizable strings files
 .Sh SYNOPSIS
 .Nm
-.Ar -base Ar basepath       \" -base path
-.Op Fl merge Ar mergepath   \" [-merge path]
-.Op Fl output Ar outputpath \" [-output path] 
+.Ar -base Ar basepath
+.Op Fl merge Ar mergepath
+.Op Fl output Ar outputpath
 .br
 .Nm
-.Ar -info Ar plistpath      \" -info path
-.Ar -strings Ar stringspath \" -strings path
-.Op Fl output Ar outputpath \" [-output path]
-.Sh DESCRIPTION             \" Section Header - required
-In its first mode of operation
+.Ar -base Ar basepath
+.Op Fl extract Ar extractpath
+.Op Fl output Ar outputpath
+.br
 .Nm
-reads the localizable strings file,  
+.Ar -base Ar basepath
+.Op Fl combine Ar combinepath
+.Op Fl output Ar outputpath
+.br
+.Nm
+.Ar -info Ar plistpath
+.Ar -strings Ar stringspath
+.Op Fl output Ar outputpath
+.Sh DESCRIPTION
+In its first mode of operation (when using the
+.Fl base
+switch)
+.Nm
+reads the localizable strings file,
 .Ar basepath ,
-parses its contents looking for valid key/value pairs, and writes out the parsed content. If a second localizable strings file,
+parses its contents looking for valid key/value pairs, and writes out the parsed content. One of three optional switches (
+.Fl merge ,
+.Fl extract ,
+or
+.Fl combine )
+may be specified to transform the results before writing them out.
+.Pp
+When
+.Fl merge
+is used to pass in a second localizable strings file,
 .Ar mergepath ,
-is specified then
 .Nm
 merges values from
 .Ar mergepath
-into the output. By default the result is written to standard output but it can be directed to a specific file by passing an appropriate
-.Ar outputpath .
-Comments in 
-.Ar basepath 
+into the output.
+.Pp
+Alternatively, if
+.Fl extract
+is used then
+.Nm
+compares
+.Ar basepath
+and
+.Ar extractpath
+looking for strings that are missing (present in
+.Ar basepath
+but not
+.Ar extractpath )
+or untranslated (present in both files but with identical key/value pairs in both) and emits only those entries.
+.Pp
+Finally,
+.Fl combine
+may be specified instead and
+.Nm
+will combine the contents of
+.Ar combinepath
+with those of
+.Ar basepath
+using a simple additive algorithm. In this way incremental localizations based on partial strings files generated using
+.Fl extract
+can be reintegrated with an existing localization.
+.Pp
+Whenever
+.Ar basepath
+is provided, comments in
+.Ar basepath
 are preserved in the output.
 .Pp
-In its second mode of operation
+In its second mode of operation (when using the
+.Fl info
+and
+.Fl strings
+switches)
 .Nm
 reads the plist file,
 .Ar plistpath
-(usually an Info.plist file), and uses its key/value pairs as a basis for performing macro substitution within the strings file, 
+(usually an Info.plist file), and uses its key/value pairs as a basis for performing macro substitution within the strings file,
 .Ar stringspath .
-Any key name in the strings file delimited using double angle quotation marks (Unicode 0x00ab and 0x00bb) will be substituted using the corresponding value from the property list file. This mode of operation is intended to supplement the "Info.plist preprocessing" feature of Xcode. If an 
+Any key name in the strings file delimited using double angle quotation marks (Unicode 0x00ab and 0x00bb) will be substituted using the corresponding value from the property list file. This mode of operation is intended to supplement the "Info.plist preprocessing" feature of Xcode.
+.Pp
+In all cases if an
 .Ar outputpath
 is specified then the results are written to that file; otherwise they are written to standard output.
 .Sh OPTIONS
-.Bl -tag -width -indent  
-.It Fl base                 
+.Bl -tag -width -indent
+.It Fl base
 Read localizable strings file
 .Ar basepath .
 .It Fl merge
 (Optional) merge with localizable strings file
 .Ar mergepath .
-Key/value pairs in 
+Key/value pairs in
 .Ar mergepath
-override key/value pairs in 
+override key/value pairs in
+.Ar basepath .
+.It Fl extract
+(Optional) extract new strings (strings that are present in
+.Ar basepath
+but not in
+.Ar extractpath )
+and untranslated strings (strings present in both files where the key/value pair is identical in both).
+.It Fl combine
+(Optional) add key/value pairs from
+.Ar combinepath
+to those in
 .Ar basepath .
 .It Fl output
 (Optional) write output to localizable strings file
 .Ar outputpath ,
-creating it if necessary. If 
+creating it if necessary. If
 .Ar outputpath
 already exists any previous content will be replaced.
 .It Fl info
-Read the plist file 
+Read the plist file
 .Ar plistpath .
 .It Fl strings
-Perform macro substitution on the strings file 
+Perform macro substitution on the strings file
 .Ar stringspath .
-.El                      \" Ends the list
+.El
 .Sh IMPLEMENTATION NOTES
 .Ss Merging algorithm
 The following actions are taken depending on whether a key is present only in
@@ -90,7 +155,7 @@ The key and value will be omitted from the output and a warning that the key was
 will be printed to standard error.
 .El
 .Pp
-In all cases, comments from 
+In all cases, comments from
 .Ar basepath
 will be carried across into the output, but comments from
 .Ar mergepath
@@ -112,6 +177,29 @@ merging previously translated key/value pairs from the same Spanish language fil
 .Pp
 The updated output directly updates the original localized Spanish file, overwriting it.
 .Pp
+This example takes an updated English language strings file,
+.Ar en.lproj/MainMenu.strings ,
+and looks for untranslated or missing strings in the corresponding Spanish language file,
+.Ar es.lproj/MainMenu.strings .
+The result is a partial strings file,
+.Ar es.lproj/MainMenu.new.strings ,
+suitable for incremental localization:
+.Pp
+.Dl "wincent-strings-util -base en.lproj/MainMenu.strings \e\ "
+.Dl "                     -extract es.lproj/MainMenu.strings \e\ "
+.Dl "                     -output es.lproj/MainMenu.new.strings"
+.Pp
+In the next example the partial strings file,
+.Ar es.lproj/MainMenu.new.strings ,
+has now been translated and is combined with the incomplete strings file,
+.Ar es.lproj/MainMenu.strings .
+Output is written back directly to the original file,
+.Ar es.lproj/MainMenu.strings :
+.Pp
+.Dl "wincent-strings-util -base es.lproj/MainMenu.strings \e\ "
+.Dl "                     -combine es.lproj/MainMenu.new.strings \e\ "
+.Dl "                     -output es.lproj/MainMenu.strings"
+.Pp
 The following example takes an unlocalized property list file,
 .Ar Info.plist ,
 and uses its key/value pairs as a basis for substitution in the localized strings file,
@@ -122,13 +210,13 @@ and uses its key/value pairs as a basis for substitution in the localized string
 .Pp
 For example, any instances of the string,
 .Ar CFBundleVersion ,
-in the strings file when surrounding by double-angle quotation marks will be substituted with the value that corresponds to the 
-.Ar CFBundleVersion 
+in the strings file when surrounding by double-angle quotation marks will be substituted with the value that corresponds to the
+.Ar CFBundleVersion
 key in the property list.
 .Pp
-.Sh SEE ALSO 
+.Sh SEE ALSO
 .Xr genstrings 1 ,
-.Xr nibtool 1 ,
+.Xr ibtool 1 ,
 .Xr plutil 1
 .Sh BUGS
 .Nm
@@ -137,7 +225,7 @@ may not perform macro substitution in the case where a previous build has been c
 is already in place in the target build directory. This is because Xcode leaves the processed files in place after building and will not replace them during subsequent builds unless the equivalent files under the source root have changed. As a consequence, the files will not get updated when they are subsequently processed because the macros will already have been substituted on a previous build; this means that the information in the files may not reflect the latest available information. The only workaround is to perform a "Clean" or "Clean All" in order to force Xcode to replace these files.
 .Sh HISTORY
 .Nm
-is a derivative work based on 
+is a derivative work based on
 .Ar stringsUtil
 by Omni Development available from
 .Ad http://www.omnigroup.com/ftp/pub/localization/ .
@@ -153,7 +241,7 @@ Always writes output files using UTF-16 encoding (the required encoding for stri
 .It
 Catches exceptions when parsing malformed strings files rather than exiting uncleanly (which would cause the Mac OS X CrashReporter to launch).
 .It
-Emits warnings when keys are present in 
+Emits warnings when keys are present in
 .Ar mergepath
 but not
 .Ar basepath .
@@ -165,7 +253,7 @@ Emits a non-zero exit code if writing to output file fails.
 Includes this man page.
 .El
 .Pp
-The first public release of 
+The first public release of
 .Nm
 took place on February 19, 2006. The latest version is always available from
 .Ad http://strings.wincent.com/ .
@@ -174,7 +262,7 @@ took place on February 19, 2006. The latest version is always available from
 .Po
 .Ad http://wincent.com/
 .Pc
-.An "Omni Development" 
+.An "Omni Development"
 .Po
 .Ad http://www.omnigroup.com/
 .Pc

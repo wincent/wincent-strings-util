@@ -18,7 +18,13 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma mark -
-#pragma mark Embedded information for what(1) 
+#pragma mark Macros
+
+#define WO_LEFT_DELIMITER   0x00ab  /* "Left-pointing double angle quotation mark" */
+#define WO_RIGHT_DELIMITER  0x00bb  /* "Right-pointing double angle quotation mark" */
+
+#pragma mark -
+#pragma mark Embedded information for what(1)
 
 // embed with tag
 #define WO_TAGGED_RCSID(msg, tag) \
@@ -427,8 +433,6 @@ int main(int argc, const char * argv[])
             NSString        *key        = nil;
             while ((key = [enumerator nextObject]))
             {
-#define WO_LEFT_DELIMITER   0x00ab  /* "Left-pointing double angle quotation mark" */
-#define WO_RIGHT_DELIMITER  0x00bb  /* "Right-pointing double angle quotation mark" */
                 NSString *replacement = [plist objectForKey:key];
                 if (!replacement  || ![replacement isKindOfClass:[NSString class]]) continue;
                 NSString *needle = [NSString stringWithFormat:@"%C%@%C", WO_LEFT_DELIMITER, key, WO_RIGHT_DELIMITER];

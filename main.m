@@ -226,33 +226,6 @@ NSString *format(NSArray *entries)
     return resultString;
 }
 
-//! Write \p string to file \p path using NSUnicodeStringEncoding.
-//! If \p path is nil, prints to standard out.
-//! Returns YES on success and NO if an error occurs.
-BOOL output(NSString *string, NSString *path)
-{
-    NSCParameterAssert(string != nil);
-    NSData *data = [string dataUsingEncoding:NSUnicodeStringEncoding];
-    if (!data)
-    {
-        fprintf(stderr, ":: error: Encoding failure\n");
-        return NO;
-    }
-    if (path)
-    {
-        if ([data writeToFile:path atomically:YES])
-            return YES;
-    }
-    else // no output path, write to standard out
-    {
-        if (write(STDOUT_FILENO, [data bytes], [data length]) != -1)
-            return YES;
-        else
-            perror("write()");
-    }
-    return NO;
-}
-
 //! Check the file at \p path for a UTF-16 byte order marker (BOM) and warn if nothing appropriate found.
 void checkUTF16(NSString *path)
 {
@@ -282,6 +255,59 @@ void checkUTF16(NSString *path)
     }
     else
         fprintf(stderr, ":: warning: unable to check file %s for BOM (file is unreadable or too short)\n", [path UTF8String]);
+}
+
+//! Tries to read the strings file at \p path and returns an array of localization entries found in the file.
+//! Immediately bails if the file could not be read or parsed.
+NSArray *input_or_die(NSString *path)
+{
+    NSCParameterAssert(path != nil);
+    checkUTF16(path); // warn if it doesn't look like UTF-16
+    NSString    *contents   = [NSString stringWithContentsOfFile:path];
+    if (!contents)
+    {
+        fprintf(stderr, ":: error: Failed to read file %s\n", [path UTF8String]);
+        exit(EXIT_FAILURE);
+    }
+
+    NSArray *entries = nil;
+    @try
+    {
+        entries = parse(contents);
+    }
+    @catch (NSException *exception)
+    {
+        fprintf(stderr, ":: error: Parse failure for %s: %s\n", [path UTF8String], [[exception reason] UTF8String]);
+        exit(EXIT_FAILURE);
+    }
+    return entries;
+}
+
+//! Write \p string to file \p path using NSUnicodeStringEncoding.
+//! If \p path is nil, prints to standard out.
+//! Returns YES on success and NO if an error occurs.
+BOOL output(NSString *string, NSString *path)
+{
+    NSCParameterAssert(string != nil);
+    NSData *data = [string dataUsingEncoding:NSUnicodeStringEncoding];
+    if (!data)
+    {
+        fprintf(stderr, ":: error: Encoding failure\n");
+        return NO;
+    }
+    if (path)
+    {
+        if ([data writeToFile:path atomically:YES])
+            return YES;
+    }
+    else // no output path, write to standard out
+    {
+        if (write(STDOUT_FILENO, [data bytes], [data length]) != -1)
+            return YES;
+        else
+            perror("write()");
+    }
+    return NO;
 }
 
 //! Show legal and copyright information.
@@ -339,37 +365,19 @@ int main(int argc, const char * argv[])
         else if (infoPath || stringsPath)
             show_usage_and_die("the -info and -strings options are not allowed with -base");
 
-        checkUTF16(basePath);   // warn if it doesn't look like UTF-16
-        NSString    *baseStrings    = [NSString stringWithContentsOfFile:basePath];
-        NSArray     *baseEntries    = nil;
-        @try
-        {
-            baseEntries = parse(baseStrings);
-        }
-        @catch (NSException *exception)
-        {
-            fprintf(stderr, ":: error: Parse failure for %s: %s\n", [basePath UTF8String], [[exception reason] UTF8String]);
-            exit(EXIT_FAILURE);
-        }
-
+        // merge, extract or combine
+        NSArray *base = input_or_die(basePath);
+        NSArray *result = nil;
         if (mergePath)
-        {
-            checkUTF16(mergePath);      // warn if it doesn't look like UTF-16
-            NSString    *mergeStrings   = [NSString stringWithContentsOfFile:mergePath];
-            NSArray     *mergeEntries   = nil;
-            @try
-            {
-                mergeEntries = parse(mergeStrings);
-            }
-            @catch (NSException *exception)
-            {
-                fprintf(stderr, ":: error: Parse failure for %s: %s\n", [mergePath UTF8String], [[exception reason] UTF8String]);
-                exit(EXIT_FAILURE);
-            }
-            baseEntries = merge(baseEntries, mergeEntries);
-        }
-        NSString *outputString = format(baseEntries);
-        if (output(outputString, outputPath))
+            result = merge(base, input_or_die(mergePath));
+        else if (extractPath)
+            result = extract(base, input_or_die(extractPath));
+        else if (combinePath)
+            result = combine(base, input_or_die(combinePath));
+
+        // write out the result
+        NSCAssert(result != nil, @"result should be non-nil");
+        if (output(format(result), outputPath))
             exitCode = EXIT_SUCCESS;
     }
     // usage 4: wincent-strings-util -info plistpath -strings stringspath

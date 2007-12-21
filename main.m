@@ -17,6 +17,10 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+// other headers
+#import "NSScanner+WOAdditions.h"
+#import "WOLocalizable.h"
+
 #pragma mark -
 #pragma mark Macros
 
@@ -28,7 +32,7 @@
 
 // embed with tag
 #define WO_TAGGED_RCSID(msg, tag) \
-        static const char *const rcsid_ ## tag[] __attribute__((used)) = { (char *)rcsid_ ## tag, "\100(#)" msg }
+    static const char *const rcsid_ ## tag[] __attribute__((used)) = { (char *)rcsid_ ## tag, "\100(#)" msg }
 
 // use as string
 #define WO_RCSID_STRING(tag) (rcsid_ ## tag[1] + 4)
@@ -50,269 +54,181 @@ WO_TAGGED_RCSID("Version: 1.2", version);
 WO_TAGGED_RCSID("wincent-strings-util", productname);
 
 #pragma mark -
-
-@interface NSScanner (CharacterAdditions)
-
-- (BOOL)peekCharacter:(unichar *)value;
-- (BOOL)scanCharacter:(unichar *)value;
-- (BOOL)scanComment:(NSString **)value;
-- (BOOL)scanQuotedString:(NSString **)value;
-- (BOOL)scanUnquotedString:(NSString **)value;
-- (NSString *)scanLocationDescription;
-- (void)complain:(NSString *)reason;
-
-@end
-
-@implementation NSScanner (CharacterAdditions)
-
-- (BOOL)peekCharacter:(unichar *)value
-{
-    NSParameterAssert(value != NULL);
-    unsigned scanLocation   = [self scanLocation];
-    NSString *string        = [self string];
-    if (scanLocation >= [string length])    // was a bug (couldn't peek at the last character)
-        return NO;
-    *value = [string characterAtIndex:scanLocation];
-    return YES;
-}
-
-- (BOOL)scanCharacter:(unichar *)value
-{
-    unsigned scanLocation   = [self scanLocation];
-    NSString *string        = [self string];
-    if (scanLocation >= [string length])    // was a bug (couldn't peek at the last character)
-        return NO;
-    if (value != NULL)
-        *value = [string characterAtIndex:scanLocation];
-    [self setScanLocation:scanLocation + 1];
-    return YES;
-}
-
-- (BOOL)scanComment:(NSString **)value
-{
-    unsigned scanLocation = [self scanLocation];
-    if ([self scanString:@"//" intoString:NULL])
-    {
-        [self scanUpToString:@"\n" intoString:value];
-        [self scanString:@"\n" intoString:NULL];
-        return YES;
-    }
-
-    if ([self scanString:@"/*" intoString:NULL])
-    {
-        [self scanUpToString:@"*/" intoString:value];
-        if ([self scanString:@"*/" intoString:NULL])
-            return YES;
-    }
-
-    [self setScanLocation:scanLocation]; // reset
-    return NO;
-}
-
-- (BOOL)scanQuotedString:(NSString **)value
-{
-    unsigned scanLocation = [self scanLocation];
-    NSString *tempString;
-    if (![self scanString:@"\"" intoString:&tempString]) return NO;
-
-    NSCharacterSet *specials = [NSCharacterSet characterSetWithCharactersInString:@"\r\n\"\\"];
-    NSMutableString *result = [NSMutableString stringWithString:tempString];
-
-    while (![self isAtEnd])
-    {
-        if ([self scanUpToCharactersFromSet:specials intoString:&tempString])
-            [result appendString:tempString];
-
-        unichar character;
-        if (![self scanCharacter:&character]) goto bail;
-        [result appendFormat:@"%C", character];
-
-        switch (character)
-        {
-            case '\"': // found closing quote
-                if (value != NULL) *value = [NSString stringWithString:result];
-                return YES;
-            case '\\': // found backslash, expect escaped next character
-                if (![self scanCharacter:&character]) goto bail;
-                [result appendFormat:@"%C", character];
-                break;
-            default:   // found literal linefeed or carriage return
-                goto bail;
-        }
-    }
-
-bail:
-    [self setScanLocation:scanLocation]; // reset
-    return NO;
-}
-
-- (BOOL)scanUnquotedString:(NSString **)value
-{
-    return ([self scanCharactersFromSet:[NSCharacterSet alphanumericCharacterSet] intoString:value]);
-}
-
-- (NSString *)scanLocationDescription
-{
-    // save state
-    unsigned        originalLocation        = [self scanLocation];
-    NSCharacterSet  *charactersToBeSkipped  = [self charactersToBeSkipped];
-    NSString        *lastLine               = @"\n";
-    unsigned        lineStartLocation       = 0;
-    unsigned        lineCount               = 0;
-    [self setScanLocation:0];
-    [self setCharactersToBeSkipped:nil];
-    while (([self scanLocation] <= originalLocation) && (![self isAtEnd]))
-    {
-        lineStartLocation = [self scanLocation];
-        if (![self scanUpToString:@"\n" intoString:&lastLine])
-            lastLine = @"\n";
-        if ([self scanString:@"\n" intoString:NULL])
-            lineCount++;
-    }
-
-    // restore state
-    [self setScanLocation:originalLocation];
-    [self setCharactersToBeSkipped:charactersToBeSkipped];
-
-    return [NSString stringWithFormat:@"line %d character %d (location %d):\n%@",
-        lineCount, (originalLocation - lineStartLocation), originalLocation, lastLine];
-}
-
-- (void)complain:(NSString *)reason
-{
-    [NSException raise:NSGenericException format:@"%@ at %@", reason, [self scanLocationDescription]];
-}
-
-@end
-
-#pragma mark -
 #pragma mark Functions
 
-/*! Parse the contents of a strings file (passed as an NSString, \p contents). */
+//! Parse the contents of a strings file.
+//! Note that this is passed as an NSString, \p contents, which is the file <em>contents</em> and not a path to the file.
 NSArray *parse(NSString *contents)
 {
     NSCParameterAssert(contents != nil);
-    NSCharacterSet *whitespace      = [NSCharacterSet characterSetWithCharactersInString:@"\n\r\t "];
-    NSMutableArray *comments        = [NSMutableArray array];
-    NSMutableArray *entries         = [NSMutableArray array];
-    NSScanner      *stringScanner   = [NSScanner scannerWithString:contents];
-    [stringScanner setCharactersToBeSkipped:nil];
-    [stringScanner setCaseSensitive:NO];
-    while (![stringScanner isAtEnd])
+    NSMutableArray *comments    = [NSMutableArray array];
+    NSMutableArray *entries     = [NSMutableArray array];
+    NSScanner      *scanner     = [NSScanner scannerWithString:contents];
+    [scanner setCharactersToBeSkipped:nil];
+    [scanner setCaseSensitive:NO];
+    while (![scanner isAtEnd])
     {
-        [stringScanner scanCharactersFromSet:whitespace intoString:NULL];
         unichar character;
-        if (![stringScanner peekCharacter:&character]) break;
+        [scanner skipWhitespace];
+        if (![scanner peekCharacter:&character])
+            break;
 
         if (character == '/')       // try to scan comment
         {
             NSString *comment = nil;
-            if (![stringScanner scanComment:&comment])
-                [stringScanner complain:@"Invalid comment"];
+            if (![scanner scanComment:&comment])
+                [scanner complain:@"Invalid comment"];
             [comments addObject:comment];
         }
         else                        // try to scan 'key = value' pair
         {
             NSString *key, *value;
-
             if (character == '\"')  // try to scan quoted string
             {
-                if (![stringScanner scanQuotedString:&key])
-                    [stringScanner complain:@"Invalid key"];
+                if (![scanner scanQuotedString:&key])
+                    [scanner complain:@"Invalid key"];
             }
             else                    // try to scan unquoted string
             {
-                if (![stringScanner scanUnquotedString:&key])
-                    [stringScanner complain:@"Invalid key"];
+                if (![scanner scanUnquotedString:&key])
+                    [scanner complain:@"Invalid key"];
             }
 
             // code common to quoted and unquoted strings
-            [stringScanner scanCharactersFromSet:whitespace intoString:NULL];
+            [scanner skipWhitespace];
+            if (![scanner scanString:@"=" intoString:NULL])
+                [scanner complain:@"Can't find = between key and value"];
+            [scanner skipWhitespace];
+            if (![scanner scanQuotedString:&value])
+                [scanner complain:@"Invalid value"];
+            [scanner skipWhitespace];
+            if (![scanner scanString:@";" intoString:NULL])
+                [scanner complain:@"Missing ;"];
 
-            if (![stringScanner scanString:@"=" intoString:NULL])
-                [stringScanner complain:@"Can't find = between key and value"];
-
-            [stringScanner scanCharactersFromSet:whitespace intoString:NULL];
-
-            if (![stringScanner scanQuotedString:&value])
-                [stringScanner complain:@"Invalid value"];
-
-            [stringScanner scanCharactersFromSet:whitespace intoString:NULL];
-
-            if (![stringScanner scanString:@";" intoString:NULL])
-                [stringScanner complain:@"Missing ;"];
-
-            [entries addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-                key,                                @"key", 
-                value,                              @"value", 
-                [NSArray arrayWithArray:comments],  @"comments", nil]];
+            [entries addObject:[WOLocalizable localizableWithKey:key value:value comments:comments]];
             [comments removeAllObjects];
         }
     }
     return entries;
 }
 
-/*! Merge base entries and merge entries. */
+//! Extract the entries which are present in \p base (the main development language) but either missing or not translated in
+//! \p target (the target localization).
+//! This is intended to help incremental localization; it can be used to generate a strings file that contains only the new
+//! strings that need to be translated.
+NSArray *extract(NSArray *base, NSArray *target)
+{
+    NSCParameterAssert(base != nil);
+    NSCParameterAssert(target != nil);
+
+    __attribute__((unused)) NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    NSMutableArray      *results            = [NSMutableArray arrayWithCapacity:base.count];
+    NSMutableDictionary *targetDictionary   = [NSMutableDictionary dictionary];
+
+    // convert target array into a dictionary for ease of look-up, ignoring comments
+    for (WOLocalizable *entry in target)
+        [targetDictionary setObject:entry.value forKey:entry.key];
+
+    for (WOLocalizable *entry in base)
+    {
+        NSString *translated = [targetDictionary objectForKey:entry.key];
+        if (!translated || translated == entry.value)
+            [results addObject:entry];
+    }
+    return results;
+}
+
+//! Combine two strings files into one using a simple additive algorithm rather than a merge.
+//! This is intended to be used in conjuncton with the extract() function; given an old strings file and a partial strings file
+//! previously extracted with extract(), combine them to form a new strings file.
+//! Returns nil on failure (unlike a merge operation, the two strings files are expected to have no overlap).
+NSArray *combine(NSArray *a, NSArray *b)
+{
+    NSCParameterAssert(a != nil);
+    NSCParameterAssert(b != nil);
+
+    __attribute__((unused)) NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    NSMutableArray *results = [a mutableCopy];
+    NSMutableSet *keys = [NSMutableSet set];
+
+    // store keys in a set for fast lookup
+    for (WOLocalizable *entry in a)
+        [keys addObject:entry.key];
+
+    BOOL duplicatesFound = NO;
+    for (WOLocalizable *entry in b)
+    {
+        if ([keys containsObject:entry.key])
+        {
+            fprintf(stderr, ":: error: duplicate key '%s'\n", [entry.key UTF8String]);
+            duplicatesFound = YES;
+            continue;
+        }
+
+        [results addObject:entry];
+        [keys addObject:entry.key];
+    }
+    return duplicatesFound ? nil : results;
+}
+
+//! Merge base entries and merge entries.
 NSArray *merge(NSArray *baseEntries, NSArray *mergeEntries)
 {
     NSCParameterAssert(baseEntries != nil);
     NSCParameterAssert(mergeEntries != nil);
 
-    __attribute__((unused))
-    NSAutoreleasePool   *pool               = [[NSAutoreleasePool alloc] init];
+    __attribute__((unused)) NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     NSMutableArray      *results            = [NSMutableArray arrayWithCapacity:[baseEntries count]];
     NSMutableSet        *baseSet            = [NSMutableSet set];
     NSMutableDictionary *mergeDictionary    = [NSMutableDictionary dictionary];
 
     // convert baseEntries array into a set, for fast look-up
-    for (NSDictionary *entry in baseEntries)
-        [baseSet addObject:[entry objectForKey:@"key"]];
+    for (WOLocalizable *entry in baseEntries)
+        [baseSet addObject:entry.key];
 
     // convert mergeEntries array into a dictionary, ignoring comments
-    for (NSDictionary *entry in mergeEntries)
+    for (WOLocalizable *entry in mergeEntries)
     {
-        NSString *key = [entry objectForKey:@"key"];
-        [mergeDictionary setObject:[entry objectForKey:@"value"] forKey:key];
+        [mergeDictionary setObject:entry.value forKey:entry.key];
 
         // warn about keys that will not appear in output
-        if (![baseSet containsObject:key])
-            fprintf(stderr, ":: warning: key '%s' in merge but not in base (omitted from output)\n", [key UTF8String]);
+        if (![baseSet containsObject:entry.key])
+            fprintf(stderr, ":: warning: key '%s' in merge but not in base (omitted from output)\n", [entry.key UTF8String]);
     }
 
-    // merge (start with "base"; translated keys from "merge" added to output)
-    for (NSDictionary *entry in baseEntries)
+    // merge (start with "base"; translated keys from "merge" are added to output)
+    for (WOLocalizable *entry in baseEntries)
     {
-        NSMutableDictionary *mutableEntry   = [entry mutableCopy];
-        NSDictionary        *mergeValue     = [mergeDictionary objectForKey:[mutableEntry objectForKey:@"key"]];
-
-        if (mergeValue)
-            [mutableEntry setObject:mergeValue forKey:@"value"];
+        // we're going to mutate the entry so make a copy of it first (not strictly necessary here, but it's good practice)
+        entry = [entry copy];
+        NSString *value = [mergeDictionary objectForKey:entry.key];
+        if (value)
+            entry.value = value;
         else
-            fprintf(stderr, ":: warning: missing key '%s' in merge (added to output)\n",
-                    [[mutableEntry objectForKey:@"key"] UTF8String]);
+            fprintf(stderr, ":: warning: missing key '%s' in merge (added to output)\n", [entry.key UTF8String]);
 
-        [results addObject:[NSDictionary dictionaryWithDictionary:mutableEntry]];
+        [results addObject:entry];
     }
-
-    return [[NSArray alloc] initWithArray:results];
+    return results;
 }
 
-/*! Format entries for output as strings file. */
+//! Format entries for output as strings file.
 NSString *format(NSArray *entries)
 {
     NSCParameterAssert(entries != nil);
     NSMutableString *resultString = [NSMutableString string];
-    for (NSDictionary *entry in entries)
+    for (WOLocalizable *entry in entries)
     {
-        for (NSString *comment in [entry objectForKey:@"comments"])
+        for (NSString *comment in entry.comments)
             [resultString appendFormat:@"/*%@*/\n", comment];
-
-        [resultString appendFormat:@"%@ = %@;\n\n", [entry objectForKey:@"key"], [entry objectForKey:@"value"]];
+        [resultString appendFormat:@"%@ = %@;\n\n", entry.key, entry.value];
     }
-    return [NSString stringWithString:resultString];
+    return resultString;
 }
 
-/*! Write \p string to file \p path using NSUnicodeStringEncoding. If \p path is nil, prints to standard out. Returns YES on success and NO if an error occurs. */
+//! Write \p string to file \p path using NSUnicodeStringEncoding.
+//! If \p path is nil, prints to standard out.
+//! Returns YES on success and NO if an error occurs.
 BOOL output(NSString *string, NSString *path)
 {
     NSCParameterAssert(string != nil);
@@ -337,12 +253,11 @@ BOOL output(NSString *string, NSString *path)
     return NO;
 }
 
-/*! Check the file at \p path for a UTF-16 byte order marker (BOM) and warn if not found appropriate. */
+//! Check the file at \p path for a UTF-16 byte order marker (BOM) and warn if nothing appropriate found.
 void checkUTF16(NSString *path)
 {
-    // http://en.wikipedia.org/wiki/Byte_Order_Mark
+    // See: <http://en.wikipedia.org/wiki/Byte_Order_Mark>
     NSCParameterAssert(path != nil);
-
     NSData *data = [NSData dataWithContentsOfFile:path];
     if (data && ([data length] >= 2))
     {
@@ -369,6 +284,36 @@ void checkUTF16(NSString *path)
         fprintf(stderr, ":: warning: unable to check file %s for BOM (file is unreadable or too short)\n", [path UTF8String]);
 }
 
+//! Show legal and copyright information.
+void legal(void)
+{
+    fprintf(stderr,
+            "%s\n"                              // product name
+            "http://strings.wincent.com/\n"
+            "%s\n"                              // version
+            "\n"
+            "%s\n"                              // copyright
+            "%s\n",                             // omni copyright
+            WO_RCSID_STRING(productname),       WO_RCSID_STRING(version),       WO_RCSID_STRING(copyright),
+            WO_RCSID_STRING(omni_copyright));
+}
+
+void usage(void)
+{
+    fprintf(stderr,
+            "Usage:\n"
+            "  %s -base basepath [-merge mergepath | -extract extractpath | -combine combinepath] [-output outputpath]\n"
+            "  %s -info plistpath -strings stringspath [-output outputpath]\n",
+            WO_RCSID_STRING(productname),   WO_RCSID_STRING(productname));
+}
+
+void show_usage_and_die(const char *message)
+{
+    fprintf(stderr, ":: error: %s\n", message);
+    usage();
+    exit(EXIT_FAILURE);
+}
+
 int main(int argc, const char * argv[])
 {
     NSAutoreleasePool   *pool           = [[NSAutoreleasePool alloc] init];
@@ -380,14 +325,23 @@ int main(int argc, const char * argv[])
     NSString            *stringsPath    = [arguments stringForKey:@"strings"];
     NSString            *basePath       = [arguments stringForKey:@"base"];
     NSString            *mergePath      = [arguments stringForKey:@"merge"];
+    NSString            *extractPath    = [arguments stringForKey:@"extract"];
+    NSString            *combinePath    = [arguments stringForKey:@"combine"];
     NSString            *outputPath     = [arguments stringForKey:@"output"];
 
     // usage 1: wincent-strings-util -base basepath [-merge mergepath] [-output outputpath]
+    // usage 2: wincent-strings-util -base basepath [-extract extractpath] [-output outputpath]
+    // usage 3: wincent-strings-util -base basepath [-combine combinepath] [-output outputpath]
     if (basePath)
     {
+        if ((mergePath && extractPath) || (mergePath && combinePath) || (extractPath && combinePath))
+            show_usage_and_die("the -merge, -extract and -combine options are mutually exclusive");
+        else if (infoPath || stringsPath)
+            show_usage_and_die("the -info and -strings options are not allowed with -base");
+
         checkUTF16(basePath);   // warn if it doesn't look like UTF-16
-        NSString        *baseStrings    = [NSString stringWithContentsOfFile:basePath];
-        NSArray         *baseEntries    = nil;
+        NSString    *baseStrings    = [NSString stringWithContentsOfFile:basePath];
+        NSArray     *baseEntries    = nil;
         @try
         {
             baseEntries = parse(baseStrings);
@@ -414,12 +368,20 @@ int main(int argc, const char * argv[])
             }
             baseEntries = merge(baseEntries, mergeEntries);
         }
-        NSString    *outputString = format(baseEntries);
-        if (output(outputString, outputPath)) exitCode = EXIT_SUCCESS;
+        NSString *outputString = format(baseEntries);
+        if (output(outputString, outputPath))
+            exitCode = EXIT_SUCCESS;
     }
-    // usage 2: wincent-strings-util -info plistpath -strings stringspath
-    else if (infoPath && stringsPath)
+    // usage 4: wincent-strings-util -info plistpath -strings stringspath
+    else if (infoPath || stringsPath)
     {
+        if (!infoPath)
+            show_usage_and_die("the -info option is required with -strings");
+        else if (!stringsPath)
+            show_usage_and_die("the -strings option is required with -info");
+        else if (mergePath || combinePath || extractPath)
+            show_usage_and_die("the -merge, -extract or -combine options are not allowed with -info and -strings");
+
         NSDictionary    *plist      = [NSDictionary dictionaryWithContentsOfFile:infoPath];
         NSMutableString *strings    = [NSMutableString stringWithContentsOfFile:stringsPath
                                                                        encoding:NSUnicodeStringEncoding
@@ -436,34 +398,23 @@ int main(int argc, const char * argv[])
             while ((key = [enumerator nextObject]))
             {
                 NSString *replacement = [plist objectForKey:key];
-                if (!replacement  || ![replacement isKindOfClass:[NSString class]]) continue;
+                if (!replacement  || ![replacement isKindOfClass:[NSString class]])
+                    continue;
                 NSString *needle = [NSString stringWithFormat:@"%C%@%C", WO_LEFT_DELIMITER, key, WO_RIGHT_DELIMITER];
                 (void)[strings replaceOccurrencesOfString:needle
                                                withString:replacement
                                                   options:NSLiteralSearch
                                                     range:NSMakeRange(0, [strings length])];
             }
-            if (output(strings, outputPath)) exitCode = EXIT_SUCCESS;
+            if (output(strings, outputPath))
+                exitCode = EXIT_SUCCESS;
         }
     }
-    else    // faulty arguments supplied, show usage
+    else    // no arguments supplied, show extended usage (with legal info)
     {
-        // print legal stuff for compliance with Omni Source License
-        fprintf(stderr, 
-                //--------------------------------- 80 columns --------------------------------->| 
-                "%s\n"                                                                  // product name
-                "http://strings.wincent.com/\n"
-                "%s\n"                                                                  // version
-                "\n"
-                "%s\n"                                                                  // copyright
-                "Based on software developed by Omni Development\n"
-                "%s\n"                                                                  // omni copyright
-                "\n"
-                "Usage:\n"
-                "  %s -base basepath [-merge mergepath] [-output outputpath]\n"
-                "  %s -info plistpath -strings stringspath [-output outputpath]\n", 
-                WO_RCSID_STRING(productname),       WO_RCSID_STRING(version),       WO_RCSID_STRING(copyright),     
-                WO_RCSID_STRING(omni_copyright),    WO_RCSID_STRING(productname),   WO_RCSID_STRING(productname));
+        legal();
+        fprintf(stderr, "\n");
+        usage();
     }
 
     [pool drain];

@@ -22,6 +22,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		BC755AC40D1BECD4005AD9F2 /* WOLocalizable.m in Sources */ = {isa = PBXBuildFile; fileRef = BC755AC30D1BECD4005AD9F2 /* WOLocalizable.m */; };
+		BC755AE70D1BF294005AD9F2 /* NSScanner+WOAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = BC755AE60D1BF294005AD9F2 /* NSScanner+WOAdditions.m */; };
 		BC79AB4E09A74186008FF8BC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 08FB7796FE84155DC02AAC07 /* main.m */; settings = {ATTRIBUTES = (); }; };
 		BC79AB5009A74186008FF8BC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08FB779EFE84155DC02AAC07 /* Foundation.framework */; };
 /* End PBXBuildFile section */
@@ -43,6 +45,10 @@
 		BC29A7BD0C4D2C1B009E427C /* debug-style.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; name = "debug-style.xcconfig"; path = "../../buildtools/debug-style.xcconfig"; sourceTree = SOURCE_ROOT; };
 		BC29A7BE0C4D2C1B009E427C /* foundation-tool-target.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; name = "foundation-tool-target.xcconfig"; path = "../../buildtools/foundation-tool-target.xcconfig"; sourceTree = SOURCE_ROOT; };
 		BC29A7BF0C4D2C1B009E427C /* release-style.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; name = "release-style.xcconfig"; path = "../../buildtools/release-style.xcconfig"; sourceTree = SOURCE_ROOT; };
+		BC755AC20D1BECD4005AD9F2 /* WOLocalizable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WOLocalizable.h; sourceTree = "<group>"; };
+		BC755AC30D1BECD4005AD9F2 /* WOLocalizable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WOLocalizable.m; sourceTree = "<group>"; };
+		BC755AE50D1BF294005AD9F2 /* NSScanner+WOAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSScanner+WOAdditions.h"; sourceTree = "<group>"; };
+		BC755AE60D1BF294005AD9F2 /* NSScanner+WOAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSScanner+WOAdditions.m"; sourceTree = "<group>"; };
 		BC79AB9009A74989008FF8BC /* wincent-strings-util.1 */ = {isa = PBXFileReference; explicitFileType = text.man; fileEncoding = 4; path = "wincent-strings-util.1"; sourceTree = "<group>"; };
 		BC79ABC109A74FAC008FF8BC /* wincent-strings-util */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "wincent-strings-util"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC79AC4109A76580008FF8BC /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
@@ -122,6 +128,10 @@
 			isa = PBXGroup;
 			children = (
 				08FB7796FE84155DC02AAC07 /* main.m */,
+				BC755AC20D1BECD4005AD9F2 /* WOLocalizable.h */,
+				BC755AC30D1BECD4005AD9F2 /* WOLocalizable.m */,
+				BC755AE50D1BF294005AD9F2 /* NSScanner+WOAdditions.h */,
+				BC755AE60D1BF294005AD9F2 /* NSScanner+WOAdditions.m */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -186,6 +196,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				BC79AB4E09A74186008FF8BC /* main.m in Sources */,
+				BC755AC40D1BECD4005AD9F2 /* WOLocalizable.m in Sources */,
+				BC755AE70D1BF294005AD9F2 /* NSScanner+WOAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

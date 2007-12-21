@@ -49,6 +49,8 @@
 		BC755AC30D1BECD4005AD9F2 /* WOLocalizable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WOLocalizable.m; sourceTree = "<group>"; };
 		BC755AE50D1BF294005AD9F2 /* NSScanner+WOAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSScanner+WOAdditions.h"; sourceTree = "<group>"; };
 		BC755AE60D1BF294005AD9F2 /* NSScanner+WOAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSScanner+WOAdditions.m"; sourceTree = "<group>"; };
+		BC755B8A0D1C1E78005AD9F2 /* util_spec.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = util_spec.rb; path = spec/util_spec.rb; sourceTree = "<group>"; };
+		BC755B8D0D1C2523005AD9F2 /* spec_helper.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = spec_helper.rb; path = spec/spec_helper.rb; sourceTree = "<group>"; };
 		BC79AB9009A74989008FF8BC /* wincent-strings-util.1 */ = {isa = PBXFileReference; explicitFileType = text.man; fileEncoding = 4; path = "wincent-strings-util.1"; sourceTree = "<group>"; };
 		BC79ABC109A74FAC008FF8BC /* wincent-strings-util */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "wincent-strings-util"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC79AC4109A76580008FF8BC /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
@@ -72,7 +74,7 @@
 			children = (
 				BC29A7B90C4D2BF6009E427C /* Configuration */,
 				BC79AC4509A765DF008FF8BC /* Source */,
-				BC33C24009A972D900E38D2D /* Unit tests */,
+				BC33C24009A972D900E38D2D /* Specs */,
 				BC79AC4409A765D2008FF8BC /* Documentation */,
 				08FB779DFE84155DC02AAC07 /* External Frameworks and Libraries */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
@@ -107,11 +109,13 @@
 			name = Configuration;
 			sourceTree = "<group>";
 		};
-		BC33C24009A972D900E38D2D /* Unit tests */ = {
+		BC33C24009A972D900E38D2D /* Specs */ = {
 			isa = PBXGroup;
 			children = (
+				BC755B8D0D1C2523005AD9F2 /* spec_helper.rb */,
+				BC755B8A0D1C1E78005AD9F2 /* util_spec.rb */,
 			);
-			name = "Unit tests";
+			name = Specs;
 			sourceTree = "<group>";
 		};
 		BC79AC4409A765D2008FF8BC /* Documentation */ = {

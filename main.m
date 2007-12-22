@@ -289,10 +289,7 @@ NSArray *input_or_die(NSString *path)
     NSString *contents_LE   = [NSString stringWithContentsOfFile:path encoding:NSUTF16LittleEndianStringEncoding error:NULL];
     NSString *contents_BE   = [NSString stringWithContentsOfFile:path encoding:NSUTF16BigEndianStringEncoding error:NULL];
     if (!contents && !contents_LE && !contents_BE)
-    {
         fprintf(stderr, ":: error: Failed to read file %s\n", [path UTF8String]);
-        exit(EXIT_FAILURE);
-    }
 
     NSArray *entries = nil;
     if (contents)
@@ -454,30 +451,26 @@ int main(int argc, const char * argv[])
             show_usage_and_die("the -merge, -extract or -combine options are not allowed with -info and -strings");
 
         NSDictionary    *plist      = [NSDictionary dictionaryWithContentsOfFile:infoPath];
-        NSMutableString *strings    = [NSMutableString stringWithContentsOfFile:stringsPath
-                                                                       encoding:NSUnicodeStringEncoding
-                                                                          error:NULL];
+        NSArray         *strings    = input_or_die(stringsPath);
         if (!plist)
             fprintf(stderr, ":: error: Failure reading %s\n", [infoPath UTF8String]);
-        else if (!strings)
-            fprintf(stderr, ":: error: Failure reading %s\n", [stringsPath UTF8String]);
-        else // all good
+        else
         {
-            checkUTF16(stringsPath);    // warn if doesn't look like UTF-16
+            NSMutableString *content    = [format(strings) mutableCopy];
             NSEnumerator    *enumerator = [plist keyEnumerator];
             NSString        *key        = nil;
             while ((key = [enumerator nextObject]))
             {
                 NSString *replacement = [plist objectForKey:key];
-                if (!replacement  || ![replacement isKindOfClass:[NSString class]])
+                if (!replacement || ![replacement isKindOfClass:[NSString class]])
                     continue;
                 NSString *needle = [NSString stringWithFormat:@"%C%@%C", WO_LEFT_DELIMITER, key, WO_RIGHT_DELIMITER];
-                (void)[strings replaceOccurrencesOfString:needle
+                (void)[content replaceOccurrencesOfString:needle
                                                withString:replacement
                                                   options:NSLiteralSearch
-                                                    range:NSMakeRange(0, [strings length])];
+                                                    range:NSMakeRange(0, [content length])];
             }
-            if (output(strings, outputPath, encoding))
+            if (output(content, outputPath, encoding))
                 exitCode = EXIT_SUCCESS;
         }
     }

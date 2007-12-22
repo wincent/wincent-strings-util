@@ -57,12 +57,21 @@ class Util
   attr_reader :stdout, :stderr, :exitstatus
   @@path = nil
 
+  # When run from an Xcode shell script phase use the just-built copy; fallback to installed copy otherwise.
+  def self.default_path
+    if ENV['TARGET_BUILD_DIR']
+      File.join(ENV['TARGET_BUILD_DIR'], 'wincent-strings-util')
+    else
+      'wincent-strings-util'
+    end
+  end
+
   def self.path=(custom)
     @@path = custom
   end
 
   def self.path
-    @@path || 'wincent-strings-util'
+    @@path ||= self.default_path
   end
 
   def self.run *args
@@ -105,11 +114,3 @@ Spec::Runner.configure do |config|
     end
   end
 end
-
-# Can override the path to wincent-strings-util from the command line in order to test different versions.
-if ARGV[0]
-  Util.path = ARGV[0]
-end
-
-# temp testing only: normally you would do this from within Xcode
-Util.path = '/Users/wincent/trabajo/leopard/build/Release/wincent-strings-util'

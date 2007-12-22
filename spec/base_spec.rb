@@ -56,12 +56,18 @@ describe '-base functionality' do
 
   describe 'Little-Endian input file without BOM' do
     before(:all) do
-      @base = file('english_BOMLESS_LE.strings')
-      @result = Util.run('-base', @base)
+      @base     = file('english_BOMLESS_LE.strings')
+      @expected = file('english_LE.strings')
+      @result   = Util.run('-base', @base)
     end
 
     it 'should complain about missing BOM' do
       @result.stderr.should =~ /no BOM found/
+    end
+
+    it 'should automatically add a little-endian BOM to the output' do
+      pending "parse() currently choking on input files which are missing their BOMs"
+      @result.stdout.should == File.read(@expected)
     end
   end
 
@@ -87,11 +93,17 @@ describe '-base functionality' do
   describe 'Big-Endian input file without BOM' do
     before(:all) do
       @base = file('english_BOMLESS_BE.strings')
+      @expected = file('english_LE.strings')
       @result = Util.run('-base', @base)
     end
 
     it 'should complain about missing BOM' do
       @result.stderr.should =~ /no BOM found/
+    end
+
+    it 'should automatically add a little-endian BOM to the output' do
+      pending "parse() currently choking on input files which are missing their BOMs"
+      @result.stdout.should == File.read(@expected)
     end
   end
 

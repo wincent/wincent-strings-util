@@ -9,21 +9,25 @@
 .Ar -base Ar basepath
 .Op Fl merge Ar mergepath
 .Op Fl output Ar outputpath
+.Op Fl encode Ar encoding
 .br
 .Nm
 .Ar -base Ar basepath
 .Op Fl extract Ar extractpath
 .Op Fl output Ar outputpath
+.Op Fl encode Ar encoding
 .br
 .Nm
 .Ar -base Ar basepath
 .Op Fl combine Ar combinepath
 .Op Fl output Ar outputpath
+.Op Fl encode Ar encoding
 .br
 .Nm
 .Ar -info Ar plistpath
 .Ar -strings Ar stringspath
 .Op Fl output Ar outputpath
+.Op Fl encode Ar encoding
 .Sh DESCRIPTION
 In its first mode of operation (when using the
 .Fl base
@@ -31,7 +35,9 @@ switch)
 .Nm
 reads the localizable strings file,
 .Ar basepath ,
-parses its contents looking for valid key/value pairs, and writes out the parsed content. One of three optional switches (
+parses its contents looking for valid key/value pairs, and writes out the parsed content. Any excess whitespace or blank lines in the input will be stripped from the output.
+.Pp
+One of three optional switches (
 .Fl merge ,
 .Fl extract ,
 or
@@ -93,7 +99,15 @@ Any key name in the strings file delimited using double angle quotation marks (U
 .Pp
 In all cases if an
 .Ar outputpath
-is specified then the results are written to that file; otherwise they are written to standard output.
+is specified then the results are written to that file; otherwise they are written to standard output. The optional
+.Fl encode
+switch can be used to explicitly specify the output encoding, which may be one of
+.Ar UTF-16BE
+(for UTF-16 big-endian) or
+.Ar UTF-16LE
+(for UTF-16 little-endian) encoding. If not specified, the output will be in UTF-16 in the native endianness for the machine on which
+.Nm
+is being executed.
 .Sh OPTIONS
 .Bl -tag -width -indent
 .It Fl base
@@ -123,6 +137,12 @@ to those in
 creating it if necessary. If
 .Ar outputpath
 already exists any previous content will be replaced.
+.It Fl encode
+(Optional) explicitly specify the encoding to be used for output. May be one of
+.Ar UTF-16BE
+(UTF-16 big-endian) or
+.Ar UTF-16LE
+(UTF-16 little-endian).
 .It Fl info
 Read the plist file
 .Ar plistpath .
@@ -165,6 +185,21 @@ On encountering a malformed localizable strings file
 .Nm
 will print a description of the parse error to standard error and exit with an exit code of 1.
 .Sh EXAMPLES
+To read in the strings file,
+.Ar es.lproj/Localizable.strings ,
+remove excess whitespace and blank lines, and write the result back to the original file using UTF-16 encoding in the native endianness for the machine on which
+.Nm
+is running:
+.Pp
+.Dl "wincent-strings-util -base es.lproj/Localizable.strings \e\ "
+.Dl "                     -output es.lproj/Localizable.strings"
+.Pp
+The same as above, but explicitly forcing a little-endian UTF-16 encoding:
+.Pp
+.Dl "wincent-strings-util -base es.lproj/Localizable.strings \e\ "
+.Dl "                     -output es.lproj/Localizable.strings \e\ "
+.Dl "                     -encode UTF-16LE"
+.Pp
 The following example takes an updated English language strings file containing new key/value pairs,
 .Ar en.lproj/Localizable.strings ,
 and creates a new Spanish language strings file,

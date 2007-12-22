@@ -284,13 +284,13 @@ NSArray *input_or_die(NSString *path)
     return entries;
 }
 
-//! Write \p string to file \p path using NSUnicodeStringEncoding.
+//! Write \p string to file \p path using the specified encoding.
 //! If \p path is nil, prints to standard out.
 //! Returns YES on success and NO if an error occurs.
-BOOL output(NSString *string, NSString *path)
+BOOL output(NSString *string, NSString *path, NSStringEncoding encoding)
 {
     NSCParameterAssert(string != nil);
-    NSData *data = [string dataUsingEncoding:NSUnicodeStringEncoding];
+    NSData *data = [string dataUsingEncoding:encoding];
     if (!data)
     {
         fprintf(stderr, ":: error: Encoding failure\n");
@@ -318,7 +318,6 @@ void legal(void)
             "%s\n"                              // product name
             "http://strings.wincent.com/\n"
             "%s\n"                              // version
-            "\n"
             "%s\n"                              // copyright
             "%s\n",                             // omni copyright
             WO_RCSID_STRING(productname),       WO_RCSID_STRING(version),       WO_RCSID_STRING(copyright),
@@ -329,8 +328,11 @@ void usage(void)
 {
     fprintf(stderr,
             "Usage:\n"
-            "  %s -base basepath [-merge mergepath | -extract extractpath | -combine combinepath] [-output outputpath]\n"
-            "  %s -info plistpath -strings stringspath [-output outputpath]\n",
+            "    %s -base basepath [-merge mergepath | -extract extractpath | -combine combinepath] [common options]\n"
+            "    %s -info plistpath -strings stringspath [common options]\n"
+            "  Common options:\n"
+            "    -output outputpath\n"
+            "    -encode UTF-16BE | UTF-16LE\n",
             WO_RCSID_STRING(productname),   WO_RCSID_STRING(productname));
 }
 
@@ -355,10 +357,22 @@ int main(int argc, const char * argv[])
     NSString            *extractPath    = [arguments stringForKey:@"extract"];
     NSString            *combinePath    = [arguments stringForKey:@"combine"];
     NSString            *outputPath     = [arguments stringForKey:@"output"];
+    NSString            *encode         = [[arguments stringForKey:@"encode"] uppercaseString];
+    NSStringEncoding    encoding        = NSUnicodeStringEncoding;
 
-    // usage 1: wincent-strings-util -base basepath [-merge mergepath] [-output outputpath]
-    // usage 2: wincent-strings-util -base basepath [-extract extractpath] [-output outputpath]
-    // usage 3: wincent-strings-util -base basepath [-combine combinepath] [-output outputpath]
+    if (encode)
+    {
+        if ([@"UTF-16BE" isEqualToString:encode])
+            encoding = NSUTF16BigEndianStringEncoding;
+        else if ([@"UTF-16LE" isEqualToString:encode])
+            encoding = NSUTF16LittleEndianStringEncoding;
+        else
+            show_usage_and_die("-encode must be UTF-16BE or UTF-16LE");
+    }
+
+    // usage 1: wincent-strings-util -base basepath [-merge mergepath] [-output outputpath] [-encode encoding]
+    // usage 2: wincent-strings-util -base basepath [-extract extractpath] [-output outputpath] [-encode encoding]
+    // usage 3: wincent-strings-util -base basepath [-combine combinepath] [-output outputpath] [-encode encoding]
     if (basePath)
     {
         if ((mergePath && extractPath) || (mergePath && combinePath) || (extractPath && combinePath))
@@ -380,10 +394,10 @@ int main(int argc, const char * argv[])
 
         // write out the result
         NSCAssert(result != nil, @"result should be non-nil");
-        if (output(format(result), outputPath))
+        if (output(format(result), outputPath, encoding))
             exitCode = EXIT_SUCCESS;
     }
-    // usage 4: wincent-strings-util -info plistpath -strings stringspath
+    // usage 4: wincent-strings-util -info plistpath -strings stringspath [-output outputpath] [-encode encoding]
     else if (infoPath || stringsPath)
     {
         if (!infoPath)
@@ -417,7 +431,7 @@ int main(int argc, const char * argv[])
                                                   options:NSLiteralSearch
                                                     range:NSMakeRange(0, [strings length])];
             }
-            if (output(strings, outputPath))
+            if (output(strings, outputPath, encoding))
                 exitCode = EXIT_SUCCESS;
         }
     }

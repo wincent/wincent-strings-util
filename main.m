@@ -168,7 +168,7 @@ NSArray *combine(NSArray *base, NSArray *target)
     {
         if ([keys member:entry.key])
         {
-            fprintf(stderr, ":: warning: duplicate key '%s'\n", [entry.key UTF8String]);
+            fprintf(stderr, ":: warning: key '%s' present in both files (will overwrite base entry)\n", [entry.key UTF8String]);
             continue;
         }
 

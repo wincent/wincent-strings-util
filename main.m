@@ -277,8 +277,8 @@ NSArray *try_parse(NSString *contents, NSString *path, NSString *encoding)
 }
 
 //! Tries to read the strings file at \p path and returns an array of localization entries found in the file.
-//! Bails if the file could not be read or parsed.
-//! First attempts parsing with generic UTF-16, falling back to explicit little-endian and big-endian UTF-16.
+//! Terminates the process if the file could not be read and parsed.
+//! First attempts parsing with generic UTF-16, falling back to explicit little-endian and then big-endian UTF-16.
 NSArray *input_or_die(NSString *path)
 {
     NSCParameterAssert(path != nil);

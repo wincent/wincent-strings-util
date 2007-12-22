@@ -66,7 +66,6 @@ describe '-base functionality' do
     end
 
     it 'should automatically add a little-endian BOM to the output' do
-      pending "parse() currently choking on input files which are missing their BOMs"
       @result.stdout.should == File.read(@expected)
     end
   end
@@ -102,7 +101,6 @@ describe '-base functionality' do
     end
 
     it 'should automatically add a little-endian BOM to the output' do
-      pending "parse() currently choking on input files which are missing their BOMs"
       @result.stdout.should == File.read(@expected)
     end
   end

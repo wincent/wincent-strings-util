@@ -258,19 +258,11 @@ void checkUTF16(NSString *path)
         fprintf(stderr, ":: warning: unable to check file %s for BOM (file is unreadable or too short)\n", [path UTF8String]);
 }
 
-//! Tries to read the strings file at \p path and returns an array of localization entries found in the file.
-//! Immediately bails if the file could not be read or parsed.
-NSArray *input_or_die(NSString *path)
+NSArray *try_parse(NSString *contents, NSString *path, NSString *encoding)
 {
+    NSCParameterAssert(contents != nil);
     NSCParameterAssert(path != nil);
-    checkUTF16(path); // warn if it doesn't look like UTF-16
-    NSString    *contents   = [NSString stringWithContentsOfFile:path];
-    if (!contents)
-    {
-        fprintf(stderr, ":: error: Failed to read file %s\n", [path UTF8String]);
-        exit(EXIT_FAILURE);
-    }
-
+    NSCParameterAssert(encoding != nil);
     NSArray *entries = nil;
     @try
     {
@@ -278,9 +270,39 @@ NSArray *input_or_die(NSString *path)
     }
     @catch (NSException *exception)
     {
-        fprintf(stderr, ":: error: Parse failure for %s: %s\n", [path UTF8String], [[exception reason] UTF8String]);
+        fprintf(stderr, ":: error: Parse failure for %s (%s): %s\n",
+            [path UTF8String], [encoding UTF8String], [[exception reason] UTF8String]);
+    }
+    return entries;
+}
+
+//! Tries to read the strings file at \p path and returns an array of localization entries found in the file.
+//! Bails if the file could not be read or parsed.
+//! First attempts parsing with generic UTF-16, falling back to explicit little-endian and big-endian UTF-16.
+NSArray *input_or_die(NSString *path)
+{
+    NSCParameterAssert(path != nil);
+    checkUTF16(path); // warn if it doesn't look like UTF-16
+
+    // try UTF-16 first, falling back to UTF-16LE and UTF-16BE if necessary
+    NSString *contents      = [NSString stringWithContentsOfFile:path encoding:NSUTF16StringEncoding error:NULL];
+    NSString *contents_LE   = [NSString stringWithContentsOfFile:path encoding:NSUTF16LittleEndianStringEncoding error:NULL];
+    NSString *contents_BE   = [NSString stringWithContentsOfFile:path encoding:NSUTF16BigEndianStringEncoding error:NULL];
+    if (!contents && !contents_LE && !contents_BE)
+    {
+        fprintf(stderr, ":: error: Failed to read file %s\n", [path UTF8String]);
         exit(EXIT_FAILURE);
     }
+
+    NSArray *entries = nil;
+    if (contents)
+        entries = try_parse(contents, path, @"UTF-16 encoding");
+    if (!entries && contents_LE)
+        entries = try_parse(contents_LE, path, @"little-endian UTF-16 encoding");
+    if (!entries && contents_BE)
+        entries = try_parse(contents_BE, path, @"big-endian UTF-16 encoding");
+    if (!entries)
+        exit(EXIT_FAILURE);
     return entries;
 }
 

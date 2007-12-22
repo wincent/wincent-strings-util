@@ -61,6 +61,7 @@ WO_TAGGED_RCSID("wincent-strings-util", productname);
 NSArray *parse(NSString *contents)
 {
     NSCParameterAssert(contents != nil);
+    NSMutableSet   *keys        = [NSMutableSet set];
     NSMutableArray *comments    = [NSMutableArray array];
     NSMutableArray *entries     = [NSMutableArray array];
     NSScanner      *scanner     = [NSScanner scannerWithString:contents];
@@ -105,6 +106,11 @@ NSArray *parse(NSString *contents)
             if (![scanner scanString:@";" intoString:NULL])
                 [scanner complain:@"Missing ;"];
 
+            if ([keys member:key])
+                // this is a bad thing (so issue an error rather than a warning) but continue processing
+                fprintf(stderr, ":: error: key '%s' appears multiple times\n", [key UTF8String]);
+            else
+                [keys addObject:key];
             [entries addObject:[WOLocalizable localizableWithKey:key value:value comments:comments]];
             [comments removeAllObjects];
         }

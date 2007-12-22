@@ -2,21 +2,34 @@
 require File.join(File.dirname(__FILE__), 'spec_helper.rb')
 
 describe '-base functionality' do
-  before(:all) do
-    @base = file('english.strings')
-    @result = Util.run('-base', @base)
+  describe 'with a valid input file' do
+    before(:all) do
+      @base = file('english.strings')
+      @result = Util.run('-base', @base)
+    end
+
+    it 'should exit with a zero status' do
+      @result.exitstatus.should == 0
+    end
+
+    it 'should echo base to standard output' do
+      @result.stdout.normalize.should == File.read(@base).normalize
+    end
+
+    it 'should emit nothing to standard error' do
+      @result.stderr.should == ''
+    end
   end
 
-  it 'should exit with a zero status' do
-    @result.exitstatus.should == 0
-  end
+  describe 'with duplicate keys' do
+    before(:all) do
+      @base = file('duplicate_keys.strings')
+      @result = Util.run('-base', @base)
+    end
 
-  it 'should echo base to standard output' do
-    @result.stdout.normalize.should == File.read(@base).normalize
-  end
-
-  it 'should emit nothing to standard error' do
-    @result.stderr.should == ''
+    it 'should complain about the duplicate keys' do
+      @result.stderr.should =~ /error.+appears multiple times/
+    end
   end
 
   describe 'with -output' do

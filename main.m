@@ -290,12 +290,36 @@ NSArray *input_or_die(NSString *path)
 BOOL output(NSString *string, NSString *path, NSStringEncoding encoding)
 {
     NSCParameterAssert(string != nil);
-    NSData *data = [string dataUsingEncoding:encoding];
-    if (!data)
+
+    // there looks to be a bug in CFStringCreateExternalRepresentation();
+    // in my testing on 10.5.1 it never adds a BOM, even though the docs suggest that it should
+    // so add the BOM manually instead
+    NSMutableData *data = nil;
+    static UInt8 bom[] = {
+        0xfe, 0xff, // big-endian
+        0xff, 0xfe, // little-endian
+    };
+    size_t bom_size = sizeof(UInt8) * 2;
+    if (encoding == NSUTF16BigEndianStringEncoding)
+        data = [NSMutableData dataWithBytes:bom length:bom_size];
+    else // default to little-endian, seeing as Intel macs are the way of the future
+        data = [NSMutableData dataWithBytes:bom + bom_size length:bom_size];
+
+    NSData *stringData = [string dataUsingEncoding:encoding];
+    if (!stringData)
     {
         fprintf(stderr, ":: error: Encoding failure\n");
         return NO;
     }
+
+    // in my testing NSData dataUsingEncoding doesn't add a BOM either, but check to make sure and skip over it if found
+    const UInt8 *bytes = [stringData bytes];
+    if (stringData.length >= bom_size &&
+        (!memcmp(bom, bytes, bom_size) || !memcmp(bom + bom_size, bytes, bom_size)))
+        [data appendBytes:bytes + bom_size length:stringData.length - bom_size];
+    else    // no BOM found
+        [data appendData:stringData];
+
     if (path)
     {
         if ([data writeToFile:path atomically:YES])

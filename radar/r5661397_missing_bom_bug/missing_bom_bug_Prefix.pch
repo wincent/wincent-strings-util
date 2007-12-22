@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'missing_bom_bug' target in the 'missing_bom_bug' project.
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif

@@ -291,7 +291,7 @@ BOOL output(NSString *string, NSString *path, NSStringEncoding encoding)
 {
     NSCParameterAssert(string != nil);
 
-    // there looks to be a bug in CFStringCreateExternalRepresentation();
+    // there looks to be a bug in CFStringCreateExternalRepresentation() (see <radar://problem/5661397>)
     // in my testing on 10.5.1 it never adds a BOM, even though the docs suggest that it should
     // so add the BOM manually instead
     NSMutableData *data = nil;

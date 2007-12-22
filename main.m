@@ -160,7 +160,7 @@ NSArray *combine(NSArray *base, NSArray *target)
 
     for (WOLocalizable *entry in base)
     {
-        if ([keys containsObject:entry.key])
+        if ([keys member:entry.key])
         {
             fprintf(stderr, ":: warning: duplicate key '%s'\n", [entry.key UTF8String]);
             continue;
@@ -193,7 +193,7 @@ NSArray *merge(NSArray *baseEntries, NSArray *mergeEntries)
         [mergeDictionary setObject:entry.value forKey:entry.key];
 
         // warn about keys that will not appear in output
-        if (![baseSet containsObject:entry.key])
+        if (![baseSet member:entry.key])
             fprintf(stderr, ":: warning: key '%s' in merge but not in base (omitted from output)\n", [entry.key UTF8String]);
     }
 

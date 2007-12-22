@@ -35,9 +35,9 @@ elsif not try_require 'iconv'
   exit 1
 end
 
-# Convenience method for providing the full path to file in same directory as this helper.
+# Convenience method for providing the full path to file in the spec/input/ directory.
 def file name
-  File.join(File.dirname(__FILE__), name)
+  File.join(File.dirname(__FILE__), 'input', name)
 end
 
 # Convenience method for providing the full path to a file in the spec/trash/ directory.

@@ -132,7 +132,7 @@ NSArray *extract(NSArray *base, NSArray *target)
     for (WOLocalizable *entry in base)
     {
         NSString *translated = [targetDictionary objectForKey:entry.key];
-        if (!translated || translated == entry.value)
+        if (!translated || [translated isEqualToString:entry.value])
             [results addObject:entry];
     }
     return results;

@@ -377,11 +377,11 @@ void usage(void)
 {
     fprintf(stderr,
             "Usage:\n"
-            "    %s -base basepath [-merge mergepath | -extract extractpath | -combine combinepath] [common options]\n"
-            "    %s -info plistpath -strings stringspath [common options]\n"
+            "    %s --base basepath [--merge mergepath | --extract extractpath | --combine combinepath] [common options]\n"
+            "    %s --info plistpath --strings stringspath [common options]\n"
             "  Common options:\n"
-            "    -output outputpath\n"
-            "    -encode UTF-16BE | UTF-16LE\n",
+            "    --output outputpath\n"
+            "    --encode UTF-16BE | UTF-16LE\n",
             WO_RCSID_STRING(productname),   WO_RCSID_STRING(productname));
 }
 
@@ -399,14 +399,14 @@ int main(int argc, const char * argv[])
 
     // process arguments
     NSUserDefaults      *arguments      = [NSUserDefaults standardUserDefaults];
-    NSString            *infoPath       = [arguments stringForKey:@"info"];
-    NSString            *stringsPath    = [arguments stringForKey:@"strings"];
-    NSString            *basePath       = [arguments stringForKey:@"base"];
-    NSString            *mergePath      = [arguments stringForKey:@"merge"];
-    NSString            *extractPath    = [arguments stringForKey:@"extract"];
-    NSString            *combinePath    = [arguments stringForKey:@"combine"];
-    NSString            *outputPath     = [arguments stringForKey:@"output"];
-    NSString            *encode         = [[arguments stringForKey:@"encode"] uppercaseString];
+    NSString            *infoPath       = [arguments stringForKey:@"-info"];
+    NSString            *stringsPath    = [arguments stringForKey:@"-strings"];
+    NSString            *basePath       = [arguments stringForKey:@"-base"];
+    NSString            *mergePath      = [arguments stringForKey:@"-merge"];
+    NSString            *extractPath    = [arguments stringForKey:@"-extract"];
+    NSString            *combinePath    = [arguments stringForKey:@"-combine"];
+    NSString            *outputPath     = [arguments stringForKey:@"-output"];
+    NSString            *encode         = [[arguments stringForKey:@"-encode"] uppercaseString];
     NSStringEncoding    encoding        = NSUnicodeStringEncoding;
 
     if (encode)
@@ -416,18 +416,18 @@ int main(int argc, const char * argv[])
         else if ([@"UTF-16LE" isEqualToString:encode])
             encoding = NSUTF16LittleEndianStringEncoding;
         else
-            show_usage_and_die("-encode must be UTF-16BE or UTF-16LE");
+            show_usage_and_die("--encode must be UTF-16BE or UTF-16LE");
     }
 
-    // usage 1: wincent-strings-util -base basepath [-merge mergepath] [-output outputpath] [-encode encoding]
-    // usage 2: wincent-strings-util -base basepath [-extract extractpath] [-output outputpath] [-encode encoding]
-    // usage 3: wincent-strings-util -base basepath [-combine combinepath] [-output outputpath] [-encode encoding]
+    // usage 1: wincent-strings-util --base basepath [--merge mergepath] [--output outputpath] [--encode encoding]
+    // usage 2: wincent-strings-util --base basepath [--extract extractpath] [--output outputpath] [--encode encoding]
+    // usage 3: wincent-strings-util --base basepath [--combine combinepath] [--output outputpath] [--encode encoding]
     if (basePath)
     {
         if ((mergePath && extractPath) || (mergePath && combinePath) || (extractPath && combinePath))
-            show_usage_and_die("the -merge, -extract and -combine options are mutually exclusive");
+            show_usage_and_die("the --merge, --extract and --combine options are mutually exclusive");
         else if (infoPath || stringsPath)
-            show_usage_and_die("the -info and -strings options are not allowed with -base");
+            show_usage_and_die("the --info and --strings options are not allowed with --base");
 
         // merge, extract or combine
         NSArray *base = input_or_die(basePath);
@@ -450,11 +450,11 @@ int main(int argc, const char * argv[])
     else if (infoPath || stringsPath)
     {
         if (!infoPath)
-            show_usage_and_die("the -info option is required with -strings");
+            show_usage_and_die("the --info option is required with --strings");
         else if (!stringsPath)
-            show_usage_and_die("the -strings option is required with -info");
+            show_usage_and_die("the --strings option is required with --info");
         else if (mergePath || combinePath || extractPath)
-            show_usage_and_die("the -merge, -extract or -combine options are not allowed with -info and -strings");
+            show_usage_and_die("the --merge, --extract or --combine options are not allowed with --info and --strings");
 
         NSDictionary    *plist      = [NSDictionary dictionaryWithContentsOfFile:infoPath];
         NSArray         *strings    = input_or_die(stringsPath);

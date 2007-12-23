@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 require File.join(File.dirname(__FILE__), 'spec_helper.rb')
 
-describe '-encode with unknown encoding' do
+describe '--encode with unknown encoding' do
   before(:all) do
     @base = file('english.strings')
-    @result = Util.run('-base', @base, '-encode', 'foo')
+    @result = Util.run('--base', @base, '--encode', 'foo')
   end
 
   it 'should exit with a non-zero status' do
@@ -21,11 +21,11 @@ describe '-encode with unknown encoding' do
 
 end
 
-describe '-encode UTF-16BE' do
+describe '--encode UTF-16BE' do
   before(:all) do
     @base = file('english.strings')
     @expected = file('english_BE.strings')
-    @result = Util.run('-base', @base, '-encode', 'UTF-16BE')
+    @result = Util.run('--base', @base, '--encode', 'UTF-16BE')
   end
 
   it 'should exit with a zero status' do
@@ -41,11 +41,11 @@ describe '-encode UTF-16BE' do
   end
 end
 
-describe '-encode UTF-16LE' do
+describe '--encode UTF-16LE' do
   before(:all) do
     @base = file('english.strings')
     @expected = file('english_LE.strings')
-    @result = Util.run('-base', @base, '-encode', 'UTF-16LE')
+    @result = Util.run('--base', @base, '--encode', 'UTF-16LE')
   end
 
   it 'should exit with a zero status' do

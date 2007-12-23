@@ -1,12 +1,12 @@
 #!/usr/bin/env ruby
 require File.join(File.dirname(__FILE__), 'spec_helper.rb')
 
-describe '-merge functionality' do
+describe '--merge functionality' do
   describe 'with untranslated target' do
     before(:all) do
       @base   = file('english_augmented.strings')
       @target = file('spanish_untranslated.strings')
-      @result = Util.run('-base', @base, '-merge', @target)
+      @result = Util.run('--base', @base, '--merge', @target)
     end
 
     it 'should match base' do
@@ -18,7 +18,7 @@ describe '-merge functionality' do
     before(:all) do
       @base   = file('english_augmented.strings')
       @target = file('spanish_partially_translated.strings')
-      @result = Util.run('-base', @base, '-merge', @target)
+      @result = Util.run('--base', @base, '--merge', @target)
     end
 
     it 'should match the base, incorporating the already translated portion' do
@@ -30,7 +30,7 @@ describe '-merge functionality' do
     before(:all) do
       @base   = file('english_augmented.strings')
       @target = file('spanish_fully_translated.strings')
-      @result = Util.run('-base', @base, '-merge', @target)
+      @result = Util.run('--base', @base, '--merge', @target)
     end
 
     it 'should match the base, incorporating the already translated portion' do

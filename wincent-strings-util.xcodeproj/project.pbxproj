@@ -51,6 +51,12 @@
 		BC755AE60D1BF294005AD9F2 /* NSScanner+WOAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSScanner+WOAdditions.m"; sourceTree = "<group>"; };
 		BC755B8A0D1C1E78005AD9F2 /* util_spec.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = util_spec.rb; path = spec/util_spec.rb; sourceTree = "<group>"; };
 		BC755B8D0D1C2523005AD9F2 /* spec_helper.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = spec_helper.rb; path = spec/spec_helper.rb; sourceTree = "<group>"; };
+		BC755C790D1EE084005AD9F2 /* combine_spec.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = combine_spec.rb; path = spec/combine_spec.rb; sourceTree = "<group>"; };
+		BC755C7A0D1EE084005AD9F2 /* extract_spec.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = extract_spec.rb; path = spec/extract_spec.rb; sourceTree = "<group>"; };
+		BC755C7B0D1EE084005AD9F2 /* merge_spec.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = merge_spec.rb; path = spec/merge_spec.rb; sourceTree = "<group>"; };
+		BC755C7C0D1EE084005AD9F2 /* output_spec.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = output_spec.rb; path = spec/output_spec.rb; sourceTree = "<group>"; };
+		BC755C7D0D1EE084005AD9F2 /* base_spec.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = base_spec.rb; path = spec/base_spec.rb; sourceTree = "<group>"; };
+		BC755C7E0D1EE084005AD9F2 /* encode_spec.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; name = encode_spec.rb; path = spec/encode_spec.rb; sourceTree = "<group>"; };
 		BC79AB9009A74989008FF8BC /* wincent-strings-util.1 */ = {isa = PBXFileReference; explicitFileType = text.man; fileEncoding = 4; path = "wincent-strings-util.1"; sourceTree = "<group>"; };
 		BC79ABC109A74FAC008FF8BC /* wincent-strings-util */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "wincent-strings-util"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC79AC4109A76580008FF8BC /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
@@ -112,6 +118,12 @@
 		BC33C24009A972D900E38D2D /* Specs */ = {
 			isa = PBXGroup;
 			children = (
+				BC755C790D1EE084005AD9F2 /* combine_spec.rb */,
+				BC755C7A0D1EE084005AD9F2 /* extract_spec.rb */,
+				BC755C7B0D1EE084005AD9F2 /* merge_spec.rb */,
+				BC755C7C0D1EE084005AD9F2 /* output_spec.rb */,
+				BC755C7D0D1EE084005AD9F2 /* base_spec.rb */,
+				BC755C7E0D1EE084005AD9F2 /* encode_spec.rb */,
 				BC755B8D0D1C2523005AD9F2 /* spec_helper.rb */,
 				BC755B8A0D1C1E78005AD9F2 /* util_spec.rb */,
 			);

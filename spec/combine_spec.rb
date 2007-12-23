@@ -1,12 +1,12 @@
 #!/usr/bin/env ruby
 require File.join(File.dirname(__FILE__), 'spec_helper.rb')
 
-describe '-combine functionality' do
+describe '--combine functionality' do
   describe 'with no overlap between the two files' do
     before(:all) do
       @base   = file('spanish_missing.strings')
       @target = file('spanish_missing_translated.strings')
-      @result = Util.run('-base', @base, '-combine', @target)
+      @result = Util.run('--base', @base, '--combine', @target)
     end
 
     it 'should combine the two files' do
@@ -22,7 +22,7 @@ describe '-combine functionality' do
     before(:all) do
       @base   = file('spanish_partially_translated.strings')
       @target = file('spanish_missing_translated.strings')
-      @result = Util.run('-base', @base, '-combine', @target)
+      @result = Util.run('--base', @base, '--combine', @target)
     end
 
     it 'should combine the two files' do

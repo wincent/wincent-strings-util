@@ -20,9 +20,9 @@ describe 'no command line switches' do
 end
 
 describe 'conflicting command line switches' do
-  describe '-merge and -info' do
+  describe '--merge and -info' do
     before(:all) do
-      @result = Util.run('-merge', 'foo', '-info', 'bar')
+      @result = Util.run('--merge', 'foo', '--info', 'bar')
     end
 
     it 'should exit with a non-zero status' do
@@ -35,9 +35,9 @@ describe 'conflicting command line switches' do
 
   end
 
-  describe '-merge and -strings' do
+  describe '--merge and -strings' do
     before(:all) do
-      @result = Util.run('-merge', 'foo', '-info', 'bar')
+      @result = Util.run('--merge', 'foo', '--info', 'bar')
     end
 
     it 'should exit with a non-zero status' do

@@ -44,7 +44,7 @@ WO_TAGGED_RCSID("Architecture: Intel (i386)", architecture);
 WO_TAGGED_RCSID("Architecture: Intel (x86_64)", architecture);
 #endif
 
-WO_TAGGED_RCSID("Version: 1.2-rc2", version);
+WO_TAGGED_RCSID("Version: 1.2-rc2+", version);
 WO_TAGGED_RCSID("wincent-strings-util", productname);
 
 #pragma mark -

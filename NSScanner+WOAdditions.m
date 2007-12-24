@@ -33,11 +33,9 @@
     return YES;
 }
 
-- (BOOL)scanComment:(NSString **)value
+- (BOOL)scanC99Comment:(NSString **)value
 {
     unsigned scanLocation = [self scanLocation];
-
-    // try single-line (Objective-C/C99) comment
     if ([self scanString:@"//" intoString:NULL])
     {
         [self scanUpToString:@"\n" intoString:value];
@@ -45,7 +43,14 @@
         return YES;
     }
 
-    // try multi-line (traditional C) comment
+    // no comment found
+    [self setScanLocation:scanLocation]; // reset
+    return NO;
+}
+
+- (BOOL)scanCComment:(NSString **)value
+{
+    unsigned scanLocation = [self scanLocation];
     if ([self scanString:@"/*" intoString:NULL])
     {
         [self scanUpToString:@"*/" intoString:value];

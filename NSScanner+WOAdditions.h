@@ -9,7 +9,13 @@
 
 - (BOOL)peekCharacter:(unichar *)value;
 - (BOOL)scanCharacter:(unichar *)value;
-- (BOOL)scanComment:(NSString **)value;
+
+//! Scan a single-line (Objective-C/C99) comment.
+- (BOOL)scanC99Comment:(NSString **)value;
+
+//! Scan a multi-line (traditional C) comment.
+- (BOOL)scanCComment:(NSString **)value;
+
 - (BOOL)scanQuotedString:(NSString **)value;
 - (BOOL)scanUnquotedString:(NSString **)value;
 - (NSString *)scanLocationDescription;

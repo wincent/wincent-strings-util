@@ -32,6 +32,17 @@ describe '--base functionality' do
     end
   end
 
+  describe 'with C99-style comments' do
+    before(:all) do
+      @base = file('bad_comments.strings')
+      @result = Util.run('--base', @base)
+    end
+
+    it 'should complain about the comments' do
+      @result.stderr.should =~ /warning.+C99/
+    end
+  end
+
   describe 'with -output' do
     it 'should write to output file' do
       @base   = file('english.strings')

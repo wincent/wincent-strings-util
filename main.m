@@ -77,8 +77,13 @@ NSArray *parse(NSString *contents)
         if (character == '/')       // try to scan comment
         {
             NSString *comment = nil;
-            if (![scanner scanComment:&comment])
-                [scanner complain:@"Invalid comment"];
+            if (![scanner scanCComment:&comment])
+            {
+                if ([scanner scanC99Comment:&comment])
+                    fprintf(stderr, ":: warning: C99-style comment found\n");
+                else
+                    [scanner complain:@"Invalid comment"];
+            }
             [comments addObject:comment];
         }
         else                        // try to scan 'key = value' pair

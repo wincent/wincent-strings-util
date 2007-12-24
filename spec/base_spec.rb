@@ -135,7 +135,7 @@ describe '--base functionality' do
       @result = Util.run('--base', @base)
     end
 
-    it 'should complain about missing BOM' do
+    it 'should complain about receiving UTF-8 input' do
       @result.stderr.should =~ /UTF-8 BOM found/
     end
   end

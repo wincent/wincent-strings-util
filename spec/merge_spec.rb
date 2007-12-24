@@ -33,7 +33,7 @@ describe '--merge functionality' do
       @result = Util.run('--base', @base, '--merge', @target)
     end
 
-    it 'should match the base, incorporating the already translated portion' do
+    it 'should match the base, incorporating the full translation' do
       @result.stdout.normalize.should == File.read(file('spanish_fully_translated_merged.strings')).normalize
     end
   end

@@ -92,7 +92,8 @@
         switch (character)
         {
             case '\"': // found closing quote
-                if (value != NULL) *value = [NSString stringWithString:result];
+                if (value != NULL)
+                    *value = result;
                 return YES;
             case '\\': // found backslash, expect escaped next character
                 if (![self scanCharacter:&character])

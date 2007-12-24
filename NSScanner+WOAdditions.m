@@ -8,6 +8,12 @@
 // category header
 #import "NSScanner+WOAdditions.h"
 
+#pragma mark -
+#pragma mark Macros
+
+#define WO_LEFT_DELIMITER   0x00ab  /* "Left-pointing double angle quotation mark" */
+#define WO_RIGHT_DELIMITER  0x00bb  /* "Right-pointing double angle quotation mark" */
+
 @implementation NSScanner (WOAdditions)
 
 - (BOOL)peekCharacter:(unichar *)value
@@ -106,6 +112,50 @@ bail:
 - (BOOL)scanUnquotedString:(NSString **)value
 {
     return [self scanCharactersFromSet:[NSCharacterSet alphanumericCharacterSet] intoString:value];
+}
+
+- (BOOL)scanUpToMacroIntoString:(NSString **)value
+{
+    NSMutableString *scanned = [NSMutableString string];
+    NSString *tempString;
+    if ([self scanUpToString:[NSString stringWithFormat:@"%C", WO_LEFT_DELIMITER] intoString:&tempString])
+        [scanned appendString:tempString];
+
+    unsigned scanLocation = [self scanLocation];
+    if ([self scanMacroIntoString:NULL])
+        // macro found: must stop just before it
+        [self setScanLocation:scanLocation];
+    else
+    {
+        // no macro found: consume rest of string
+        NSString *remainder = [self remainder];
+        [scanned appendString:remainder];
+        [self setScanLocation:[self scanLocation] + remainder.length];
+    }
+
+    if (value)
+        *value = scanned;
+    return (scanned.length > 0);
+}
+
+- (BOOL)scanMacroIntoString:(NSString **)value
+{
+    unsigned scanLocation       = [self scanLocation];
+    NSString *leftDelimiter     = [NSString stringWithFormat:@"%C", WO_LEFT_DELIMITER];
+    NSString *rightDelimiter    = [NSString stringWithFormat:@"%C", WO_RIGHT_DELIMITER];
+
+    if ([self scanString:leftDelimiter intoString:NULL] &&
+        [self scanUpToString:rightDelimiter intoString:value] &&
+        [self scanString:rightDelimiter intoString:NULL])
+        return YES;
+
+    [self setScanLocation:scanLocation]; // reset
+    return NO;
+}
+
+- (NSString *)remainder
+{
+    return [[self string] substringFromIndex:[self scanLocation]];
 }
 
 - (NSString *)scanLocationDescription

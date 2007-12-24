@@ -22,12 +22,6 @@
 #import "WOLocalizable.h"
 
 #pragma mark -
-#pragma mark Macros
-
-#define WO_LEFT_DELIMITER   0x00ab  /* "Left-pointing double angle quotation mark" */
-#define WO_RIGHT_DELIMITER  0x00bb  /* "Right-pointing double angle quotation mark" */
-
-#pragma mark -
 #pragma mark Embedded information for what(1)
 
 // embed with tag
@@ -236,6 +230,78 @@ NSString *format(NSArray *entries)
         [resultString appendFormat:@"%@ = %@;\n\n", entry.key, entry.value];
     }
     return resultString;
+}
+
+//! The \p state parameter is used to monitor the recursion and guard against infinite loops.
+//! Pass nil for \p state  and it will be automatically initialized on first entering the function.
+NSString *substitution_for_key(NSDictionary *plist, NSArray *entries, NSString *key, NSMutableSet *state)
+{
+    NSCParameterAssert(plist != nil);
+    NSCParameterAssert(entries != nil);
+    NSCParameterAssert(key != nil);
+    state = state ? [state mutableCopy] : [NSMutableSet set];
+    if ([state member:key])
+        [NSException raise:NSGenericException format:@"infinite recursion detected for key '%@'", key];
+    [state addObject:key];
+
+    for (WOLocalizable *entry in entries)
+    {
+        if (![key isEqualToString:entry.key])
+            continue;
+
+        NSMutableString     *newValue   = [NSMutableString string];
+        NSMutableDictionary *values     = [NSMutableDictionary dictionary];
+        NSScanner           *scanner    = [NSScanner scannerWithString:entry.value];
+        [scanner setCharactersToBeSkipped:nil];
+        [scanner setCaseSensitive:NO];
+        while (![scanner isAtEnd])
+        {
+            NSString *tempString;
+            if ([scanner scanUpToMacroIntoString:&tempString])
+                [newValue appendString:tempString];
+            if ([scanner scanMacroIntoString:&tempString])
+            {
+                // check values seen so far in this loop
+                NSString *string = [values objectForKey:tempString];
+                if (!string)
+                {
+                    // try recursing
+                    string = substitution_for_key(plist, entries, tempString, state);
+                    if (string)
+                    {
+                        // strip enclosing quotes (values should always be quoted, so minimum length should be 2)
+                        NSCAssert(string.length >= 2, @"value should be quoted");
+                        string = [string substringWithRange:NSMakeRange(1, string.length - 2)];
+                    }
+                }
+                if (!string)
+                    // fallback to Info.plist lookup: no need to strip quotes here because these won't be quoted
+                    string = [plist objectForKey:tempString];
+                if (!string)
+                    [NSException raise:NSGenericException format:@"no value found for key '%@'", tempString];
+                [values setObject:string forKey:tempString];
+                [newValue appendString:string];
+            }
+        }
+        return [newValue isEqualToString:@""] ? nil : newValue;
+    }
+    return nil;
+}
+
+//! Given a set of key/value pairs in \p plist and a set of strings in \p entries, perform recursive macro-substitution.
+NSArray *substitute(NSDictionary *plist, NSArray *entries)
+{
+    NSCParameterAssert(plist != nil);
+    NSCParameterAssert(entries != nil);
+    NSMutableArray *results = [NSMutableArray arrayWithCapacity:entries.count];
+    for (WOLocalizable *entry in entries)
+    {
+        WOLocalizable *newEntry = [WOLocalizable localizableWithKey:entry.key
+                                                              value:substitution_for_key(plist, entries, entry.key, nil)
+                                                           comments:entry.comments];
+        [results addObject:newEntry];
+    }
+    return results;
 }
 
 //! Check the file at \p path for a UTF-16 byte order marker (BOM) and warn if nothing appropriate found.
@@ -461,27 +527,24 @@ int main(int argc, const char * argv[])
         else if (mergePath || combinePath || extractPath)
             show_usage_and_die("the --merge, --extract or --combine options are not allowed with --info and --strings");
 
-        NSDictionary    *plist      = [NSDictionary dictionaryWithContentsOfFile:infoPath];
         NSArray         *strings    = input_or_die(stringsPath);
+        NSDictionary    *plist      = [NSDictionary dictionaryWithContentsOfFile:infoPath];
         if (!plist)
             fprintf(stderr, ":: error: Failure reading %s\n", [infoPath UTF8String]);
         else
         {
-            NSMutableString *content    = [format(strings) mutableCopy];
-            NSEnumerator    *enumerator = [plist keyEnumerator];
-            NSString        *key        = nil;
-            while ((key = [enumerator nextObject]))
+            NSString *substituted = nil;
+            @try
             {
-                NSString *replacement = [plist objectForKey:key];
-                if (!replacement || ![replacement isKindOfClass:[NSString class]])
-                    continue;
-                NSString *needle = [NSString stringWithFormat:@"%C%@%C", WO_LEFT_DELIMITER, key, WO_RIGHT_DELIMITER];
-                (void)[content replaceOccurrencesOfString:needle
-                                               withString:replacement
-                                                  options:NSLiteralSearch
-                                                    range:NSMakeRange(0, [content length])];
+                // will raise an exception if infinite recursion detected
+                substituted = format(substitute(plist, strings));
             }
-            if (output(content, outputPath, encoding))
+            @catch (NSException *exception)
+            {
+                fprintf(stderr, ":: error: Substitution failure for %s: %s\n",
+                    [stringsPath UTF8String], [[exception reason] UTF8String]);
+            }
+            if (substituted && output(substituted, outputPath, encoding))
                 exitCode = EXIT_SUCCESS;
         }
     }

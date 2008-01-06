@@ -3,7 +3,7 @@
 // wincent-strings-util
 //
 // Created by Wincent Colaiuta on 21 December 2007.
-// Copyright 2007 Wincent Colaiuta.
+// Copyright 2007-2008 Wincent Colaiuta.
 
 //! Simple class that represents a localization entry in a strings file.
 @interface WOLocalizable : NSObject <NSCopying> {

@@ -9,4 +9,4 @@ For more information on man, type "man man" in the terminal.
 
 LICENSE NOTES
 
-Wincent Strings Utility is copyright 2005-2007 Wincent Colaiuta. It is based on software developed by Omni Development, copyright 2002 Omni Development, Inc. This derivative work is made available according to the terms of the GNU General Public License (see file LICENSE.txt) with the permission of Omni Development.
+Wincent Strings Utility is copyright 2005-2008 Wincent Colaiuta. It is based on software developed by Omni Development, copyright 2002 Omni Development, Inc. This derivative work is made available according to the terms of the GNU General Public License (see file LICENSE.txt) with the permission of Omni Development.

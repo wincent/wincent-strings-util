@@ -6,31 +6,31 @@
 .Nd merge localizable strings files
 .Sh SYNOPSIS
 .Nm
-.Ar --base Ar basepath
-.Op Fl merge Ar mergepath
-.Op Fl output Ar outputpath
-.Op Fl encode Ar encoding
+.Fl -base Ar basepath
+.Op Fl -merge Ar mergepath
+.Op Fl -output Ar outputpath
+.Op Fl -encode Ar encoding
 .br
 .Nm
-.Ar --base Ar basepath
-.Op Fl extract Ar extractpath
-.Op Fl output Ar outputpath
-.Op Fl encode Ar encoding
+.Fl -base Ar basepath
+.Op Fl -extract Ar extractpath
+.Op Fl -output Ar outputpath
+.Op Fl -encode Ar encoding
 .br
 .Nm
-.Ar --base Ar basepath
-.Op Fl combine Ar combinepath
-.Op Fl output Ar outputpath
-.Op Fl encode Ar encoding
+.Fl -base Ar basepath
+.Op Fl -combine Ar combinepath
+.Op Fl -output Ar outputpath
+.Op Fl -encode Ar encoding
 .br
 .Nm
-.Ar --info Ar plistpath
-.Ar --strings Ar stringspath
-.Op Fl output Ar outputpath
-.Op Fl encode Ar encoding
+.Fl -info Ar plistpath
+.Fl -strings Ar stringspath
+.Op Fl -output Ar outputpath
+.Op Fl -encode Ar encoding
 .Sh DESCRIPTION
 In its first mode of operation (when using the
-.Fl base
+.Fl -base
 switch)
 .Nm
 reads the localizable strings file,
@@ -38,14 +38,14 @@ reads the localizable strings file,
 parses its contents looking for valid key/value pairs, and writes out the parsed content. Any excess whitespace or blank lines in the input will be stripped from the output.
 .Pp
 One of three optional switches (
-.Fl merge ,
-.Fl extract ,
+.Fl -merge ,
+.Fl -extract ,
 or
-.Fl combine )
+.Fl -combine )
 may be specified to transform the results before writing them out.
 .Pp
 When
-.Fl merge
+.Fl -merge
 is used to pass in a second localizable strings file,
 .Ar mergepath ,
 .Nm
@@ -54,7 +54,7 @@ merges values from
 into the output.
 .Pp
 Alternatively, if
-.Fl extract
+.Fl -extract
 is used then
 .Nm
 compares
@@ -68,7 +68,7 @@ but not
 or untranslated (present in both files but with identical key/value pairs in both) and emits only those entries.
 .Pp
 Finally,
-.Fl combine
+.Fl -combine
 may be specified instead and
 .Nm
 will combine the contents of
@@ -76,7 +76,7 @@ will combine the contents of
 with those of
 .Ar basepath
 using a simple additive algorithm. In this way incremental localizations based on partial strings files generated using
-.Fl extract
+.Fl -extract
 can be reintegrated with an existing localization.
 .Pp
 Whenever
@@ -86,9 +86,9 @@ is provided, comments in
 are preserved in the output.
 .Pp
 In its second mode of operation (when using the
-.Fl info
+.Fl -info
 and
-.Fl strings
+.Fl -strings
 switches)
 .Nm
 reads the plist file,
@@ -100,7 +100,7 @@ Any key name in the strings file delimited using double angle quotation marks (U
 In all cases if an
 .Ar outputpath
 is specified then the results are written to that file; otherwise they are written to standard output. The optional
-.Fl encode
+.Fl -encode
 switch can be used to explicitly specify the output encoding, which may be one of
 .Ar UTF-16BE
 (for UTF-16 big-endian) or
@@ -110,43 +110,43 @@ switch can be used to explicitly specify the output encoding, which may be one o
 is being executed.
 .Sh OPTIONS
 .Bl -tag -width -indent
-.It Fl base
+.It Fl -base
 Read localizable strings file
 .Ar basepath .
-.It Fl merge
+.It Fl -merge
 (Optional) merge with localizable strings file
 .Ar mergepath .
 Key/value pairs in
 .Ar mergepath
 override key/value pairs in
 .Ar basepath .
-.It Fl extract
+.It Fl -extract
 (Optional) extract new strings (strings that are present in
 .Ar basepath
 but not in
 .Ar extractpath )
 and untranslated strings (strings present in both files where the key/value pair is identical in both).
-.It Fl combine
+.It Fl -combine
 (Optional) add key/value pairs from
 .Ar combinepath
 to those in
 .Ar basepath .
-.It Fl output
+.It Fl -output
 (Optional) write output to localizable strings file
 .Ar outputpath ,
 creating it if necessary. If
 .Ar outputpath
 already exists any previous content will be replaced.
-.It Fl encode
+.It Fl -encode
 (Optional) explicitly specify the encoding to be used for output. May be one of
 .Ar UTF-16BE
 (UTF-16 big-endian) or
 .Ar UTF-16LE
 (UTF-16 little-endian).
-.It Fl info
+.It Fl -info
 Read the plist file
 .Ar plistpath .
-.It Fl strings
+.It Fl -strings
 Perform macro substitution on the strings file
 .Ar stringspath .
 .El

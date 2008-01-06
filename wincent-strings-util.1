@@ -6,26 +6,26 @@
 .Nd merge localizable strings files
 .Sh SYNOPSIS
 .Nm
-.Ar -base Ar basepath
+.Ar --base Ar basepath
 .Op Fl merge Ar mergepath
 .Op Fl output Ar outputpath
 .Op Fl encode Ar encoding
 .br
 .Nm
-.Ar -base Ar basepath
+.Ar --base Ar basepath
 .Op Fl extract Ar extractpath
 .Op Fl output Ar outputpath
 .Op Fl encode Ar encoding
 .br
 .Nm
-.Ar -base Ar basepath
+.Ar --base Ar basepath
 .Op Fl combine Ar combinepath
 .Op Fl output Ar outputpath
 .Op Fl encode Ar encoding
 .br
 .Nm
-.Ar -info Ar plistpath
-.Ar -strings Ar stringspath
+.Ar --info Ar plistpath
+.Ar --strings Ar stringspath
 .Op Fl output Ar outputpath
 .Op Fl encode Ar encoding
 .Sh DESCRIPTION
@@ -191,14 +191,14 @@ remove excess whitespace and blank lines, and write the result back to the origi
 .Nm
 is running:
 .Pp
-.Dl "wincent-strings-util -base es.lproj/Localizable.strings \e\ "
-.Dl "                     -output es.lproj/Localizable.strings"
+.Dl "wincent-strings-util --base es.lproj/Localizable.strings \e\ "
+.Dl "                     --output es.lproj/Localizable.strings"
 .Pp
 The same as above, but explicitly forcing a little-endian UTF-16 encoding:
 .Pp
-.Dl "wincent-strings-util -base es.lproj/Localizable.strings \e\ "
-.Dl "                     -output es.lproj/Localizable.strings \e\ "
-.Dl "                     -encode UTF-16LE"
+.Dl "wincent-strings-util --base es.lproj/Localizable.strings \e\ "
+.Dl "                     --output es.lproj/Localizable.strings \e\ "
+.Dl "                     --encode UTF-16LE"
 .Pp
 The following example takes an updated English language strings file containing new key/value pairs,
 .Ar en.lproj/Localizable.strings ,
@@ -206,9 +206,9 @@ and creates a new Spanish language strings file,
 .Ar es.lproj/Localizable.strings ,
 merging previously translated key/value pairs from the same Spanish language file into the output:
 .Pp
-.Dl "wincent-strings-util -base en.lproj/Localizable.strings \e\ "
-.Dl "                     -merge es.lproj/Localizable.strings \e\ "
-.Dl "                     -output es.lproj/Localizable.strings"
+.Dl "wincent-strings-util --base en.lproj/Localizable.strings \e\ "
+.Dl "                     --merge es.lproj/Localizable.strings \e\ "
+.Dl "                     --output es.lproj/Localizable.strings"
 .Pp
 The updated output directly updates the original localized Spanish file, overwriting it.
 .Pp
@@ -220,9 +220,9 @@ The result is a partial strings file,
 .Ar es.lproj/MainMenu.new.strings ,
 suitable for incremental localization:
 .Pp
-.Dl "wincent-strings-util -base en.lproj/MainMenu.strings \e\ "
-.Dl "                     -extract es.lproj/MainMenu.strings \e\ "
-.Dl "                     -output es.lproj/MainMenu.new.strings"
+.Dl "wincent-strings-util --base en.lproj/MainMenu.strings \e\ "
+.Dl "                     --extract es.lproj/MainMenu.strings \e\ "
+.Dl "                     --output es.lproj/MainMenu.new.strings"
 .Pp
 In the next example the partial strings file,
 .Ar es.lproj/MainMenu.new.strings ,
@@ -231,17 +231,17 @@ has now been translated and is combined with the incomplete strings file,
 Output is written back directly to the original file,
 .Ar es.lproj/MainMenu.strings :
 .Pp
-.Dl "wincent-strings-util -base es.lproj/MainMenu.strings \e\ "
-.Dl "                     -combine es.lproj/MainMenu.new.strings \e\ "
-.Dl "                     -output es.lproj/MainMenu.strings"
+.Dl "wincent-strings-util --base es.lproj/MainMenu.strings \e\ "
+.Dl "                     --combine es.lproj/MainMenu.new.strings \e\ "
+.Dl "                     --output es.lproj/MainMenu.strings"
 .Pp
 The following example takes an unlocalized property list file,
 .Ar Info.plist ,
 and uses its key/value pairs as a basis for substitution in the localized strings file,
 .Ar en.lproj/InfoPlist.strings :
 .Pp
-.Dl "wincent-strings-util -info Info.plist \e\ "
-.Dl "                     -strings en.lproj/InfoPlist.strings"
+.Dl "wincent-strings-util --info Info.plist \e\ "
+.Dl "                     --strings en.lproj/InfoPlist.strings"
 .Pp
 For example, any instances of the string,
 .Ar CFBundleVersion ,

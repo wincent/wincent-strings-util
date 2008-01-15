@@ -161,6 +161,7 @@
 			buildPhases = (
 				BC79AB4D09A74186008FF8BC /* Sources */,
 				BC79AB4F09A74186008FF8BC /* Frameworks */,
+				BC67D9090D3CD80A006A5196 /* Run Script (autotest) */,
 			);
 			buildRules = (
 			);
@@ -191,6 +192,20 @@
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		BC67D9090D3CD80A006A5196 /* Run Script (autotest) */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script (autotest)";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "touch \"$SOURCE_ROOT/.autotest\"\n";
+		};
 		BCB2833B0C5B8B730057E475 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

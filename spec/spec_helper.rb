@@ -35,6 +35,8 @@ elsif not try_require 'iconv'
   exit 1
 end
 
+try_require 'autotest'
+
 # Convenience method for providing the full path to file in the spec/input/ directory.
 def file name
   File.join(File.dirname(__FILE__), 'input', name)

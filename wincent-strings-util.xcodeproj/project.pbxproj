@@ -41,10 +41,10 @@
 /* Begin PBXFileReference section */
 		08FB7796FE84155DC02AAC07 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		08FB779EFE84155DC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		BC29A7BC0C4D2C1B009E427C /* base-style.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; name = "base-style.xcconfig"; path = "../../buildtools/base-style.xcconfig"; sourceTree = SOURCE_ROOT; };
-		BC29A7BD0C4D2C1B009E427C /* debug-style.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; name = "debug-style.xcconfig"; path = "../../buildtools/debug-style.xcconfig"; sourceTree = SOURCE_ROOT; };
-		BC29A7BE0C4D2C1B009E427C /* foundation-tool-target.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; name = "foundation-tool-target.xcconfig"; path = "../../buildtools/foundation-tool-target.xcconfig"; sourceTree = SOURCE_ROOT; };
-		BC29A7BF0C4D2C1B009E427C /* release-style.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; name = "release-style.xcconfig"; path = "../../buildtools/release-style.xcconfig"; sourceTree = SOURCE_ROOT; };
+		BC29A7BC0C4D2C1B009E427C /* base-style.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; name = "base-style.xcconfig"; path = "buildtools/base-style.xcconfig"; sourceTree = "<group>"; };
+		BC29A7BD0C4D2C1B009E427C /* debug-style.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; name = "debug-style.xcconfig"; path = "buildtools/debug-style.xcconfig"; sourceTree = "<group>"; };
+		BC29A7BE0C4D2C1B009E427C /* foundation-tool-target.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; name = "foundation-tool-target.xcconfig"; path = "buildtools/foundation-tool-target.xcconfig"; sourceTree = "<group>"; };
+		BC29A7BF0C4D2C1B009E427C /* release-style.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; name = "release-style.xcconfig"; path = "buildtools/release-style.xcconfig"; sourceTree = "<group>"; };
 		BC755AC20D1BECD4005AD9F2 /* WOLocalizable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WOLocalizable.h; sourceTree = "<group>"; };
 		BC755AC30D1BECD4005AD9F2 /* WOLocalizable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WOLocalizable.m; sourceTree = "<group>"; };
 		BC755AE50D1BF294005AD9F2 /* NSScanner+WOAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSScanner+WOAdditions.h"; sourceTree = "<group>"; };
@@ -267,6 +267,7 @@
 		};
 		BC79AB5309A74186008FF8BC /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BC29A7BE0C4D2C1B009E427C /* foundation-tool-target.xcconfig */;
 			buildSettings = {
 				INSTALL_PATH = "$(HOME)/bin";
 				PRODUCT_NAME = "wincent-strings-util";

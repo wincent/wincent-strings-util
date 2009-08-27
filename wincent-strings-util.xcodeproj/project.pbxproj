@@ -11,7 +11,7 @@
 			isa = PBXAggregateTarget;
 			buildConfigurationList = BCB2834D0C5B8BA90057E475 /* Build configuration list for PBXAggregateTarget "Installer package" */;
 			buildPhases = (
-				BCB2833B0C5B8B730057E475 /* ShellScript */,
+				BCB2833B0C5B8B730057E475 /* Run "Package.sh" from buildtools */,
 			);
 			dependencies = (
 				BCB283400C5B8B770057E475 /* PBXTargetDependency */,
@@ -210,13 +210,14 @@
 			shellPath = /bin/sh;
 			shellScript = "touch \"$SOURCE_ROOT/.autotest\"\n";
 		};
-		BCB2833B0C5B8B730057E475 /* ShellScript */ = {
+		BCB2833B0C5B8B730057E475 /* Run "Package.sh" from buildtools */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Run \"Package.sh\" from buildtools";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;

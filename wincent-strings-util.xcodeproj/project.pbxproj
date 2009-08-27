@@ -61,6 +61,8 @@
 		BC79ABC109A74FAC008FF8BC /* wincent-strings-util */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "wincent-strings-util"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BC79AC4109A76580008FF8BC /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		BC79AC5709A767C4008FF8BC /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		BCF40F121046AC88005DA7FE /* buildtools */ = {isa = PBXFileReference; lastKnownFileType = folder; path = buildtools; sourceTree = "<group>"; };
+		BCF40F6D1046AC93005DA7FE /* Package.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = Package.sh; path = buildtools/Package.sh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,7 +80,8 @@
 		08FB7794FE84155DC02AAC07 /* stringsUtil */ = {
 			isa = PBXGroup;
 			children = (
-				BC29A7B90C4D2BF6009E427C /* Configuration */,
+				BCF40F121046AC88005DA7FE /* buildtools */,
+				BCF40F111046AC71005DA7FE /* buildtools */,
 				BC79AC4509A765DF008FF8BC /* Source */,
 				BC33C24009A972D900E38D2D /* Specs */,
 				BC79AC4409A765D2008FF8BC /* Documentation */,
@@ -102,17 +105,6 @@
 				BC79ABC109A74FAC008FF8BC /* wincent-strings-util */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		BC29A7B90C4D2BF6009E427C /* Configuration */ = {
-			isa = PBXGroup;
-			children = (
-				BC29A7BC0C4D2C1B009E427C /* base-style.xcconfig */,
-				BC29A7BD0C4D2C1B009E427C /* debug-style.xcconfig */,
-				BC29A7BE0C4D2C1B009E427C /* foundation-tool-target.xcconfig */,
-				BC29A7BF0C4D2C1B009E427C /* release-style.xcconfig */,
-			);
-			name = Configuration;
 			sourceTree = "<group>";
 		};
 		BC33C24009A972D900E38D2D /* Specs */ = {
@@ -150,6 +142,18 @@
 				BC755AE60D1BF294005AD9F2 /* NSScanner+WOAdditions.m */,
 			);
 			name = Source;
+			sourceTree = "<group>";
+		};
+		BCF40F111046AC71005DA7FE /* buildtools */ = {
+			isa = PBXGroup;
+			children = (
+				BC29A7BC0C4D2C1B009E427C /* base-style.xcconfig */,
+				BC29A7BD0C4D2C1B009E427C /* debug-style.xcconfig */,
+				BC29A7BE0C4D2C1B009E427C /* foundation-tool-target.xcconfig */,
+				BC29A7BF0C4D2C1B009E427C /* release-style.xcconfig */,
+				BCF40F6D1046AC93005DA7FE /* Package.sh */,
+			);
+			name = buildtools;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

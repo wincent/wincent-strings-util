@@ -460,6 +460,7 @@ void show_usage_and_die(const char *message)
 
 int main(int argc, const char * argv[])
 {
+    objc_startCollectorThread();
     NSAutoreleasePool   *pool           = [[NSAutoreleasePool alloc] init];
     int                 exitCode        = EXIT_FAILURE;
 

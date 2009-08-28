@@ -16,6 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+// system headers
+#import <objc/objc-auto.h>
+
 // other headers
 #import "NSScanner+WOAdditions.h"
 #import "WOLocalizable.h"

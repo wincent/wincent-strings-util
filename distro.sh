@@ -6,7 +6,7 @@
 # print warning if current HEAD is not a signed/annotated tag
 TAGGED=""
 
-# for signed tags this will be "2.0" or similar
+# for signed tags $HEAD will be "2.0" or similar
 # for unsigned tags or untagged commits will be "2.0-5-g08867ea" or similar
 HEAD=$(git describe)
 for TAG in $(git tag)

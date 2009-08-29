@@ -66,3 +66,5 @@ do
 done
 
 # prep plaintext version of manpage
+MANPAGE="wincent-strings-util.1"
+man ./$MANPAGE | col -b > "$BUILT_PRODUCTS_DIR/$MANPAGE.txt"

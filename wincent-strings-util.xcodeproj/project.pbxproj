@@ -45,6 +45,8 @@
 		BC29A7BD0C4D2C1B009E427C /* debug-style.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; name = "debug-style.xcconfig"; path = "buildtools/debug-style.xcconfig"; sourceTree = "<group>"; };
 		BC29A7BE0C4D2C1B009E427C /* foundation-tool-target.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; name = "foundation-tool-target.xcconfig"; path = "buildtools/foundation-tool-target.xcconfig"; sourceTree = "<group>"; };
 		BC29A7BF0C4D2C1B009E427C /* release-style.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; name = "release-style.xcconfig"; path = "buildtools/release-style.xcconfig"; sourceTree = "<group>"; };
+		BC4799841048A94B00092001 /* tag-release.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "tag-release.sh"; sourceTree = "<group>"; };
+		BC4799851048A96100092001 /* distro.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = distro.sh; sourceTree = "<group>"; };
 		BC755AC20D1BECD4005AD9F2 /* WOLocalizable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WOLocalizable.h; sourceTree = "<group>"; };
 		BC755AC30D1BECD4005AD9F2 /* WOLocalizable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WOLocalizable.m; sourceTree = "<group>"; };
 		BC755AE50D1BF294005AD9F2 /* NSScanner+WOAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSScanner+WOAdditions.h"; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 				BCF40F111046AC71005DA7FE /* buildtools */,
 				BC79AC4509A765DF008FF8BC /* Source */,
 				BC33C24009A972D900E38D2D /* Specs */,
+				BC4799821048A93C00092001 /* Scripts */,
 				BC79AC4409A765D2008FF8BC /* Documentation */,
 				08FB779DFE84155DC02AAC07 /* External Frameworks and Libraries */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
@@ -120,6 +123,15 @@
 				BC755B8A0D1C1E78005AD9F2 /* util_spec.rb */,
 			);
 			name = Specs;
+			sourceTree = "<group>";
+		};
+		BC4799821048A93C00092001 /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				BC4799841048A94B00092001 /* tag-release.sh */,
+				BC4799851048A96100092001 /* distro.sh */,
+			);
+			name = Scripts;
 			sourceTree = "<group>";
 		};
 		BC79AC4409A765D2008FF8BC /* Documentation */ = {

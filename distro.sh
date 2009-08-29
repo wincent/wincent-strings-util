@@ -26,8 +26,19 @@ zip -j "$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED.zip" \
        "$BUILT_PRODUCTS_DIR/WincentStringsUtility.pkg"
 
 # prep source archive
-git archive $TAGGED | gzip > "$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED-src.tar.gz"
-# including submodules
+git archive $TAGGED > "$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED-src.tar"
+
+# add submodules to archive
+git ls-tree $TAGGED | grep '^160000 ' | \
+while read mode type sha1 path
+do
+  rm -rf "$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED-$path-src/$path"
+  mkdir -p "$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED-$path-src/$path"
+  (cd $path && git archive $sha1 | tar -xf - -C "$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED-$path-src/$path")
+  tar -rf "$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED-src.tar" \
+       -C "$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED-$path-src" $path
+done
+bzip2 -f "$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED-src.tar"
 
 # prep release notes
 

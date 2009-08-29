@@ -20,10 +20,9 @@ if [ -z "$TAGGED" ]; then
   TAGGED=$HEAD
 fi
 
-# prep binary -> zip installer pkg
-rm -f "$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED.zip"
-zip -j "$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED.zip" \
-       "$BUILT_PRODUCTS_DIR/WincentStringsUtility.pkg"
+# give installer package unique name prior to uploading
+mv "$BUILT_PRODUCTS_DIR/WincentStringsUtility.pkg" \
+   "$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED.pkg"
 
 # prep source archive
 git archive $TAGGED > "$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED-src.tar"

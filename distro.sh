@@ -26,6 +26,7 @@ zip -j "$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED.zip" \
        "$BUILT_PRODUCTS_DIR/WincentStringsUtility.pkg"
 
 # prep source archive
+git archive $TAGGED | gzip > "$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED-src.tar.gz"
 # including submodules
 
 # prep release notes

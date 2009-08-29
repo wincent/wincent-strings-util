@@ -41,5 +41,28 @@ done
 bzip2 -f "$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED-src.tar"
 
 # prep release notes
+NOTES="$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED-release-notes.txt"
+"$BUILDTOOLS_DIR/ReleaseNotes.sh" > $NOTES
+git ls-tree $TAGGED | grep '^160000 ' | \
+while read mode type sha1 path
+do
+  SUBMODULE_NOTES=$(cd $path && "$BUILDTOOLS_DIR/ReleaseNotes.sh" --tag-prefix="wincent-strings-util-")
+  if [ $(echo "$SUBMODULE_NOTES" | wc -l) -ne 1 ]; then
+    echo -n "$path: " >> $NOTES
+    echo "$SUBMODULE_NOTES" >> $NOTES
+  fi
+done
+
+NOTES="$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED-detailed-release-notes.txt"
+"$BUILDTOOLS_DIR/ReleaseNotes.sh" --long > $NOTES
+git ls-tree $TAGGED | grep '^160000 ' | \
+while read mode type sha1 path
+do
+  SUBMODULE_NOTES=$(cd $path && "$BUILDTOOLS_DIR/ReleaseNotes.sh" --long --tag-prefix="wincent-strings-util-")
+  if [ $(echo "$SUBMODULE_NOTES" | wc -l) -ne 1 ]; then
+    echo -n "$path: " >> $NOTES
+    echo "$SUBMODULE_NOTES" >> $NOTES
+  fi
+done
 
 # prep plaintext version of manpage

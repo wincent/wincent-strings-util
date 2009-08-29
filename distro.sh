@@ -32,11 +32,11 @@ git archive $TAGGED > "$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED-src.tar"
 git ls-tree $TAGGED | grep '^160000 ' | \
 while read mode type sha1 path
 do
-  rm -rf "$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED-$path-src/$path"
-  mkdir -p "$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED-$path-src/$path"
-  (cd $path && git archive $sha1 | tar -xf - -C "$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED-$path-src/$path")
+  rm -rf "$PROJECT_TEMP_DIR/$PROJECT-$TAGGED-$path-src/$path"
+  mkdir -p "$PROJECT_TEMP_DIR/$PROJECT-$TAGGED-$path-src/$path"
+  (cd $path && git archive $sha1 | tar -xf - -C "$PROJECT_TEMP_DIR/$PROJECT-$TAGGED-$path-src/$path")
   tar -rf "$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED-src.tar" \
-       -C "$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED-$path-src" $path
+       -C "$PROJECT_TEMP_DIR/$PROJECT-$TAGGED-$path-src" $path
 done
 bzip2 -f "$BUILT_PRODUCTS_DIR/$PROJECT-$TAGGED-src.tar"
 

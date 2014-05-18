@@ -331,7 +331,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BC29A7BE0C4D2C1B009E427C /* foundation-tool-target.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				GCC_ENABLE_OBJC_GC = "";
 				PRODUCT_NAME = "wincent-strings-util";
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -339,8 +343,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BC29A7BE0C4D2C1B009E427C /* foundation-tool-target.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				GCC_ENABLE_OBJC_GC = "";
 				INSTALL_PATH = "$(HOME)/bin";
 				PRODUCT_NAME = "wincent-strings-util";
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};

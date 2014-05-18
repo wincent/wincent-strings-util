@@ -124,7 +124,6 @@ NSArray *extract(NSArray *base, NSArray *target)
     NSCParameterAssert(base != nil);
     NSCParameterAssert(target != nil);
 
-    __attribute__((unused)) NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     NSMutableArray      *results            = [NSMutableArray arrayWithCapacity:base.count];
     NSMutableDictionary *targetDictionary   = [NSMutableDictionary dictionary];
 
@@ -153,7 +152,6 @@ NSArray *combine(NSArray *base, NSArray *target)
     NSCParameterAssert(base != nil);
     NSCParameterAssert(target != nil);
 
-    __attribute__((unused)) NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     NSMutableArray *results = [target mutableCopy];
     NSMutableSet *keys = [NSMutableSet set];
 
@@ -181,7 +179,6 @@ NSArray *merge(NSArray *baseEntries, NSArray *mergeEntries)
     NSCParameterAssert(baseEntries != nil);
     NSCParameterAssert(mergeEntries != nil);
 
-    __attribute__((unused)) NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     NSMutableArray      *results            = [NSMutableArray arrayWithCapacity:[baseEntries count]];
     NSMutableSet        *baseSet            = [NSMutableSet set];
     NSMutableDictionary *mergeDictionary    = [NSMutableDictionary dictionary];
@@ -201,7 +198,7 @@ NSArray *merge(NSArray *baseEntries, NSArray *mergeEntries)
     }
 
     // merge (start with "base"; translated keys from "merge" are added to output)
-    for (WOLocalizable *entry in baseEntries)
+    for (__strong WOLocalizable *entry in baseEntries)
     {
         // we're going to mutate the entry so make a copy of it first (not strictly necessary here, but it's good practice)
         entry = [entry copy];
@@ -464,96 +461,96 @@ void show_usage_and_die(const char *message)
 int main(int argc, const char * argv[])
 {
     objc_startCollectorThread();
-    NSAutoreleasePool   *pool           = [[NSAutoreleasePool alloc] init];
-    int                 exitCode        = EXIT_FAILURE;
+    @autoreleasepool {
+        int                 exitCode        = EXIT_FAILURE;
 
-    // process arguments
-    NSUserDefaults      *arguments      = [NSUserDefaults standardUserDefaults];
-    NSString            *infoPath       = [arguments stringForKey:@"-info"];
-    NSString            *stringsPath    = [arguments stringForKey:@"-strings"];
-    NSString            *basePath       = [arguments stringForKey:@"-base"];
-    NSString            *mergePath      = [arguments stringForKey:@"-merge"];
-    NSString            *extractPath    = [arguments stringForKey:@"-extract"];
-    NSString            *combinePath    = [arguments stringForKey:@"-combine"];
-    NSString            *outputPath     = [arguments stringForKey:@"-output"];
-    NSString            *encode         = [[arguments stringForKey:@"-encode"] uppercaseString];
-    NSStringEncoding    encoding        = NSUnicodeStringEncoding;
+        // process arguments
+        NSUserDefaults      *arguments      = [NSUserDefaults standardUserDefaults];
+        NSString            *infoPath       = [arguments stringForKey:@"-info"];
+        NSString            *stringsPath    = [arguments stringForKey:@"-strings"];
+        NSString            *basePath       = [arguments stringForKey:@"-base"];
+        NSString            *mergePath      = [arguments stringForKey:@"-merge"];
+        NSString            *extractPath    = [arguments stringForKey:@"-extract"];
+        NSString            *combinePath    = [arguments stringForKey:@"-combine"];
+        NSString            *outputPath     = [arguments stringForKey:@"-output"];
+        NSString            *encode         = [[arguments stringForKey:@"-encode"] uppercaseString];
+        NSStringEncoding    encoding        = NSUnicodeStringEncoding;
 
-    if (encode)
-    {
-        if ([@"UTF-16BE" isEqualToString:encode])
-            encoding = NSUTF16BigEndianStringEncoding;
-        else if ([@"UTF-16LE" isEqualToString:encode])
-            encoding = NSUTF16LittleEndianStringEncoding;
-        else
-            show_usage_and_die("--encode must be UTF-16BE or UTF-16LE");
-    }
-
-    // usage 1: wincent-strings-util --base basepath [--merge mergepath] [--output outputpath] [--encode encoding]
-    // usage 2: wincent-strings-util --base basepath [--extract extractpath] [--output outputpath] [--encode encoding]
-    // usage 3: wincent-strings-util --base basepath [--combine combinepath] [--output outputpath] [--encode encoding]
-    if (basePath)
-    {
-        if ((mergePath && extractPath) || (mergePath && combinePath) || (extractPath && combinePath))
-            show_usage_and_die("the --merge, --extract and --combine options are mutually exclusive");
-        else if (infoPath || stringsPath)
-            show_usage_and_die("the --info and --strings options are not allowed with --base");
-
-        // merge, extract or combine
-        NSArray *base = input_or_die(basePath);
-        NSArray *result = nil;
-        if (mergePath)
-            result = merge(base, input_or_die(mergePath));
-        else if (extractPath)
-            result = extract(base, input_or_die(extractPath));
-        else if (combinePath)
-            result = combine(base, input_or_die(combinePath));
-        else
-            result = base;
-
-        // write out the result
-        NSCAssert(result != nil, @"result should be non-nil");
-        if (output(format(result), outputPath, encoding))
-            exitCode = EXIT_SUCCESS;
-    }
-    // usage 4: wincent-strings-util -info plistpath -strings stringspath [-output outputpath] [-encode encoding]
-    else if (infoPath || stringsPath)
-    {
-        if (!infoPath)
-            show_usage_and_die("the --info option is required with --strings");
-        else if (!stringsPath)
-            show_usage_and_die("the --strings option is required with --info");
-        else if (mergePath || combinePath || extractPath)
-            show_usage_and_die("the --merge, --extract or --combine options are not allowed with --info and --strings");
-
-        NSArray         *strings    = input_or_die(stringsPath);
-        NSDictionary    *plist      = [NSDictionary dictionaryWithContentsOfFile:infoPath];
-        if (!plist)
-            fprintf(stderr, ":: error: Failure reading %s\n", [infoPath UTF8String]);
-        else
+        if (encode)
         {
-            NSString *substituted = nil;
-            @try
-            {
-                // will raise an exception if infinite recursion detected
-                substituted = format(substitute(plist, strings));
-            }
-            @catch (NSException *exception)
-            {
-                fprintf(stderr, ":: error: Substitution failure for %s: %s\n",
-                    [stringsPath UTF8String], [[exception reason] UTF8String]);
-            }
-            if (substituted && output(substituted, outputPath, encoding))
+            if ([@"UTF-16BE" isEqualToString:encode])
+                encoding = NSUTF16BigEndianStringEncoding;
+            else if ([@"UTF-16LE" isEqualToString:encode])
+                encoding = NSUTF16LittleEndianStringEncoding;
+            else
+                show_usage_and_die("--encode must be UTF-16BE or UTF-16LE");
+        }
+
+        // usage 1: wincent-strings-util --base basepath [--merge mergepath] [--output outputpath] [--encode encoding]
+        // usage 2: wincent-strings-util --base basepath [--extract extractpath] [--output outputpath] [--encode encoding]
+        // usage 3: wincent-strings-util --base basepath [--combine combinepath] [--output outputpath] [--encode encoding]
+        if (basePath)
+        {
+            if ((mergePath && extractPath) || (mergePath && combinePath) || (extractPath && combinePath))
+                show_usage_and_die("the --merge, --extract and --combine options are mutually exclusive");
+            else if (infoPath || stringsPath)
+                show_usage_and_die("the --info and --strings options are not allowed with --base");
+
+            // merge, extract or combine
+            NSArray *base = input_or_die(basePath);
+            NSArray *result = nil;
+            if (mergePath)
+                result = merge(base, input_or_die(mergePath));
+            else if (extractPath)
+                result = extract(base, input_or_die(extractPath));
+            else if (combinePath)
+                result = combine(base, input_or_die(combinePath));
+            else
+                result = base;
+
+            // write out the result
+            NSCAssert(result != nil, @"result should be non-nil");
+            if (output(format(result), outputPath, encoding))
                 exitCode = EXIT_SUCCESS;
         }
-    }
-    else    // no arguments supplied, show extended usage (with legal info)
-    {
-        legal();
-        fprintf(stderr, "\n");
-        usage();
-    }
+        // usage 4: wincent-strings-util -info plistpath -strings stringspath [-output outputpath] [-encode encoding]
+        else if (infoPath || stringsPath)
+        {
+            if (!infoPath)
+                show_usage_and_die("the --info option is required with --strings");
+            else if (!stringsPath)
+                show_usage_and_die("the --strings option is required with --info");
+            else if (mergePath || combinePath || extractPath)
+                show_usage_and_die("the --merge, --extract or --combine options are not allowed with --info and --strings");
 
-    [pool drain];
-    return exitCode;
+            NSArray         *strings    = input_or_die(stringsPath);
+            NSDictionary    *plist      = [NSDictionary dictionaryWithContentsOfFile:infoPath];
+            if (!plist)
+                fprintf(stderr, ":: error: Failure reading %s\n", [infoPath UTF8String]);
+            else
+            {
+                NSString *substituted = nil;
+                @try
+                {
+                    // will raise an exception if infinite recursion detected
+                    substituted = format(substitute(plist, strings));
+                }
+                @catch (NSException *exception)
+                {
+                    fprintf(stderr, ":: error: Substitution failure for %s: %s\n",
+                        [stringsPath UTF8String], [[exception reason] UTF8String]);
+                }
+                if (substituted && output(substituted, outputPath, encoding))
+                    exitCode = EXIT_SUCCESS;
+            }
+        }
+        else    // no arguments supplied, show extended usage (with legal info)
+        {
+            legal();
+            fprintf(stderr, "\n");
+            usage();
+        }
+
+        return exitCode;
+    }
 }

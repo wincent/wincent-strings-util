@@ -385,6 +385,7 @@
 		BCB2833D0C5B8B730057E475 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_ENABLE_OBJC_GC = "";
 				PRODUCT_NAME = WincentStringsUtility;
 			};
 			name = Debug;
@@ -392,6 +393,7 @@
 		BCB2833E0C5B8B730057E475 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_ENABLE_OBJC_GC = "";
 				PRODUCT_NAME = WincentStringsUtility;
 			};
 			name = Release;

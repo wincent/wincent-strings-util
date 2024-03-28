@@ -431,7 +431,7 @@ void legal(void)
 {
     fprintf(stderr,
             "%s\n"                              // product name
-            "http://strings.wincent.com/\n"
+            "https://wincent.dev/\n"
             "%s\n"                              // version
             "%s\n"                              // copyright
             "%s\n",                             // omni copyright

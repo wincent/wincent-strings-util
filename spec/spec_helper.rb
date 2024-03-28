@@ -25,7 +25,7 @@ elsif not try_require 'wopen3'
   puts <<-EOF
 These specs require Wopen3 to run.
 For more information on RSpec visit:
-  http://wincent.com/a/products/walrus/wopen3/
+  https://wincent.dev/a/products/walrus/wopen3/
 To install Wopen3:
   sudo gem install wopen3
 EOF
